@@ -1,13 +1,15 @@
 const db = require("../db");
 
 exports.submitspot = async (req,res)=>{
-    const { name, description, district, location, user_id } = req.body;
+    const { name, description, district, location } = req.body;
+    const userId = req.user.id; 
+    const image = req.file?.path || null;
 
     try {
         await db.query(
-            `INSERT INTO spots (name, description, district, location, user_id, is_verified) 
-             VALUES (?, ?, ?, ?, ?, 0)`,
-            [name, description, district, location, user_id]
+            `INSERT INTO spots (name, description, district, location, user_id, is_verified,image) 
+             VALUES (?, ?, ?, ?, ?, 0,?)`,
+            [name, description, district, location, userId , image]
           );
       
           res.status(201).json({ message: 'Food spot submitted for review!' });
@@ -18,12 +20,12 @@ exports.submitspot = async (req,res)=>{
 }
 
 exports.addReview = async (req, res) => {
-    const { user_id, spot_id, rating, comment } = req.body;
-  
+    const { spot_id, rating, comment } = req.body;
+    const userId = req.user.id; 
     try {
       const [existing] = await db.query(
         "SELECT * FROM reviews WHERE user_id = ? AND spot_id = ?",
-        [user_id, spot_id]
+        [userId, spot_id]
       );
   
       if (existing.length > 0) {
@@ -32,7 +34,7 @@ exports.addReview = async (req, res) => {
   
       await db.query(
         "INSERT INTO reviews (user_id, spot_id, rating, comment) VALUES (?, ?, ?, ?)",
-        [user_id, spot_id, rating, comment]
+        [userId, spot_id, rating, comment]
       );
   
       res.status(201).json({ message: "Review added successfully!" });
@@ -116,4 +118,49 @@ exports.addReview = async (req, res) => {
       res.status(500).json({ error: "Failed to fetch spots" });
     }
   };
+
+exports.searchspot =  async (req, res) => {
+  const { query } = req.query; 
+
+  try {
+    const [spots] = await db.query(
+      'SELECT * FROM spots WHERE name LIKE ? AND is_verified = 1', 
+      [`%${query}%`] 
+    );
+    
+    res.json(spots);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to search spots" });
+  }
+};
+
+
+  exports.getProfile = async(req,res)=>{
+    const userId = req.user.id
+
+    try {
+      const [users] = await db.query('SELECT id , username, email FROM users WHERE id = ?', [userId])
+      if (users.length === 0){
+        return res.status(404).json({message : 'user not found'})
+      }
+      res.status(200).json(users[0])
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
+
+  exports.deleteAccount = async (req, res) => {
+    const userId = req.user.id;
+  
+    try {
+      await db.query('DELETE FROM users WHERE id = ?', [userId]);
+      res.json({ message: 'Account deleted successfully' });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+  
   
