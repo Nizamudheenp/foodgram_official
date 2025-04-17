@@ -88,7 +88,7 @@ exports.addReview = async (req, res) => {
           IFNULL(AVG(r.rating), 0) as avg_rating 
         FROM spots s
         LEFT JOIN reviews r ON s.id = r.spot_id
-        WHERE s.approved = TRUE
+        WHERE s.is_verified = TRUE
         GROUP BY s.id
         ORDER BY avg_rating DESC
         LIMIT 10;
@@ -140,7 +140,7 @@ exports.searchspot =  async (req, res) => {
     const userId = req.user.id
 
     try {
-      const [users] = await db.query('SELECT id , username, email FROM users WHERE id = ?', [userId])
+      const [users] = await db.query('SELECT id , username, email, role FROM users WHERE id = ?', [userId])
       if (users.length === 0){
         return res.status(404).json({message : 'user not found'})
       }

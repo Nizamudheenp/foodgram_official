@@ -23,4 +23,22 @@ exports.approveSpot = async (req, res) => {
       res.status(500).json({ error: "Failed to approve spot" });
     }
   };
+
+  exports.deleteSpot = async (req, res) => {
+    const spotId = req.params.id;
+  
+    try {
+      const [result] = await db.query('DELETE FROM spots WHERE id = ?', [spotId]);
+  
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: 'Spot not found or already deleted.' });
+      }
+  
+      return res.status(200).json({ message: 'Spot deleted successfully.' });
+    } catch (err) {
+      console.error('Error deleting spot:', err);
+      return res.status(500).json({ message: 'Server error while deleting spot.' });
+    }
+  };
+  
   

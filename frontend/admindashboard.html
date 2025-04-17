@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Foodgram</title>
+    <link rel="stylesheet" href="homepage.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="spot.css">
+
+
+</head>
+<body>
+    <header class="header">
+
+        <a href="homepage.html"><img class="logo" src="bgimages/logo1.jpg" alt="Foodgram logo"></a>
+
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle" class="hamburger">&#9776;</label>
+
+        <ul class="dropdownmenu">
+            <li><a href="homepage.html">HOME</a></li>
+            <li><a href="spot.html">SPOT</a></li>
+            <li><a href="myspot.html">MY SPOT</a></li>
+            <li class="user-menu" id="userMenu">
+                <i class="bi bi-person-circle user-icon" id="userIcon"></i>
+                <div class="user-dropdown hidden" id="userDropdown">
+                    <p id="userInfo"></p>
+                    <button id="logoutBtn">Logout</button>
+                    <button id="adminBtn" class="hidden">Admin Dashboard</button>
+                </div>
+            </li>
+        </ul>
+
+    </header>
+
+    <div class="overlay"></div>
+
+    <div id="loginForm" class="login-popup">
+        <form id="login">
+            <h2>login</h2>
+            <input type="text" placeholder="email" required id="email">
+            <input type="password" placeholder="password" required id="password">
+            <button type="submit">login</button>
+            &nbsp; <button id="go-to-register">go to register</button>
+        </form>
+
+    </div>
+
+
+    <div id="registerForm" class="register-popup">
+        <form id="register">
+            <h2>register</h2>
+            <input type="text" placeholder="username" required id="regUserName">
+            <input type="email" placeholder="email" required id="regEmail">
+            <input type="password" placeholder="password" required id="regPassword">
+            <input type="password" placeholder="conform password" required id="regConfirmPassword">
+            <button type="submit">register</button>
+        </form>
+
+    </div>
+
+    <h1 style="margin-top: 100px; text-align: center";>Pending Spot Approvals</h1>
+  <div id="pendingSpotsContainer"></div>
+
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>

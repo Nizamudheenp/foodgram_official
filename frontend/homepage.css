@@ -114,9 +114,178 @@ a.normal:hover{
     border: 1px solid #000;
 }
 
+/* User menu styling */
+.user-menu {
+    position: relative;
+    margin-left: 15px;
+}
 
-/* logout section end */
+.user-icon {
+    font-size: 28px;
+    color: #000;
+    cursor: pointer;
+}
 
+.user-dropdown {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: white;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 180px;
+    z-index: 9999;
+}
+
+.user-dropdown p {
+    margin: 0;
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+    word-wrap: break-word;
+}
+
+.user-dropdown button {
+    padding: 8px 12px;
+    font-size: 14px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.user-dropdown button:hover {
+    background-color: #444;
+}
+
+.hidden {
+    display: none;
+}
+
+/*login section start*/
+
+.login-popup{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 250px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background: url(bgimages/logo.jpg);
+    background-color: #000;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 75%;
+    display: none; 
+    z-index: 1000;
+    border-radius: 5px;
+}
+.login-popup h2{
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;    
+}
+.login-popup input{
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+    border-radius: 5px;            
+    margin: 3px 0;
+    outline: none;
+    box-sizing: border-box;
+    color: #fff;
+    font-weight: 600;
+    background: rgba(81, 86, 81, 0.595);
+}
+.login-popup input::placeholder{
+    color: #848882;
+    font-size: 15px;
+}
+.login-popup button{
+    margin: 5px 0;
+    padding: 7px 10px;
+    background: rgba(81, 86, 81, 0.595);
+    color: #fff;
+    border-radius: 5px;
+    font-style: italic;
+    cursor: pointer;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none; 
+    z-index: 999;
+  }
+/*login section end*/
+
+/* register section start */
+
+.register-popup{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 350px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background: url(bgimages/logo.jpg);
+    background-color: #000;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 75%;
+    display: none; 
+    z-index: 1000;
+    border-radius: 5px;
+}
+.register-popup h2{
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;    
+}
+.register-popup input{
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+    border-radius: 5px;            
+    margin: 3px 0;
+    outline: none;
+    box-sizing: border-box;
+    color: #fff;
+    font-weight: 600;
+    background: rgba(81, 86, 81, 0.595);
+}
+.register-popup input::placeholder{
+    color: #848882;
+    font-size: 15px;
+}
+.register-popup button{
+    margin: 5px 0;
+    padding: 7px 10px;
+    background: rgba(81, 86, 81, 0.595);
+    color: #fff;
+    border-radius: 5px;
+    font-style: italic;
+    cursor: pointer;
+}
+
+
+
+/* register section end */
 /* Responsive Styling */
 @media (max-width: 768px) {
     .hamburger {
@@ -149,10 +318,9 @@ a.normal:hover{
         display: block;
         padding: 15px;
     }
-
-    #logoutBtn {
-        margin: 10px auto;
-        width: 100%;
+    .user-dropdown {
+        position: absolute;
+        left:0 ;
     }
 }
 
@@ -398,6 +566,7 @@ footer .side img {
     height: 90px;
     border-radius: 8px;
     margin-top: 5px;
+    border: 2px solid #f9a825;
 }
 
 footer .logo {
@@ -450,6 +619,14 @@ footer .icon i:hover {
         align-items: center;
     }
 }
+
+@media (max-width: 480px) {
+    footer {
+        padding: 20px;
+        text-align: center;
+    }
+}
+
 
 
 /*footer section end*/

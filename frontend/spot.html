@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Spots - Foodgram</title>
+    <link rel="stylesheet" href="homepage.css">
+    <link rel="stylesheet" href="spot.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+</head>
+
+<body>
+    <header class="header">
+
+        <a href="homepage.html"><img class="logo" src="bgimages/logo1.jpg" alt="Foodgram logo"></a>
+
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle" class="hamburger">&#9776;</label>
+
+        <ul class="dropdownmenu">
+            <li><a href="homepage.html">HOME</a></li>
+            <li><a href="spot.html">SPOT</a></li>
+            <li><a href="myspot.html">MY SPOT</a></li>
+            <li class="user-menu" id="userMenu">
+                <i class="bi bi-person-circle user-icon" id="userIcon"></i>
+                <div class="user-dropdown hidden" id="userDropdown">
+                    <p id="userInfo"></p>
+                    <button id="logoutBtn">Logout</button>
+                    <button id="adminBtn" class="hidden">Admin Dashboard</button>
+                </div>
+            </li>
+        </ul>
+
+    </header>
+
+    <div class="overlay"></div>
+
+    <div id="loginForm" class="login-popup">
+        <form id="login">
+            <h2>login</h2>
+            <input type="text" placeholder="email" required id="email">
+            <input type="password" placeholder="password" required id="password">
+            <button type="submit">login</button>
+            &nbsp; <button id="go-to-register">go to register</button>
+        </form>
+
+    </div>
+
+
+    <div id="registerForm" class="register-popup">
+        <form id="register">
+            <h2>register</h2>
+            <input type="text" placeholder="username" required id="regUserName">
+            <input type="email" placeholder="email" required id="regEmail">
+            <input type="password" placeholder="password" required id="regPassword">
+            <input type="password" placeholder="conform password" required id="regConfirmPassword">
+            <button type="submit">register</button>
+        </form>
+
+    </div>
+
+    <section class="spot-controls">
+        <h2>Explore Food Spots</h2>
+        <div class="filters">
+            <input type="text" id="searchInput" placeholder="Search by name..." />
+            <button id="searchBtn">Search</button>
+            <button class="filter-btn active" id="topRatedBtn">Top Rated</button>
+            <button class="filter-btn" id="districtBtn">By District</button>
+            
+            <select id="districtSelect" class="hidden">
+                <option value="">--Select District--</option>
+                <option value="Alappuzha">Alappuzha</option>
+                <option value="Ernakulam">Ernakulam</option>
+                <option value="Idukki">Idukki</option>
+                <option value="Kannur">Kannur</option>
+                <option value="Kasaragod">Kasaragod</option>
+                <option value="Kollam">Kollam</option>
+                <option value="Kottayam">Kottayam</option>
+                <option value="Kozhikode">Kozhikode</option>
+                <option value="Malappuram">Malappuram</option>
+                <option value="Palakkad">Palakkad</option>
+                <option value="Pathanamthitta">Pathanamthitta</option>
+                <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                <option value="Thrissur">Thrissur</option>
+                <option value="Wayanad">Wayanad</option>
+            </select>
+        </div>
+    </section>
+
+    <section class="spot-grid" id="spotContainer">
+        <!-- JavaScript will inject food spot cards here -->
+    </section>
+
+
+    <script src="script.js"></script>
+</body>
+
+</html>

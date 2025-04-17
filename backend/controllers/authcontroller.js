@@ -1,6 +1,7 @@
 const db = require("../db");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 exports.register = async (req, res) => {
     const { username, email, password } = req.body;
@@ -35,28 +36,35 @@ exports.login = async (req, res) => {
 
     try {
         const [user] = await db.query(
-            'SELECT * FROM users WHERE email = ? AND password = ?',
-            [email, password]
+            'SELECT * FROM users WHERE email = ?',
+            [email]
         );
-
+        
         if (user.length === 0) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
-
+        
         const isMatch = await bcrypt.compare(password, user[0].password);
-
         
         if (!isMatch) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
+        
 
-        const token  = jwt.sign(
-            {id: user.id, email: user.email },
+        const token = jwt.sign(
+            { id: user[0].id, email: user[0].email, role: user[0].role },
             process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_EXPIRES_IN }
-        )
-
-        res.json({ message: 'Login successful',token , user: { id: user.id, username: user.username, email: user.email,role: user.role }  });
+        );
+        
+        
+        res.json({ message: 'Login successful',token ,user: {
+            id: user[0].id,
+            username: user[0].username,
+            email: user[0].email,
+            role: user[0].role
+          }
+            });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
