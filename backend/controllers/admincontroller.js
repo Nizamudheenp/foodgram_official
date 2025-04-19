@@ -10,6 +10,16 @@ exports.getPendingSpots = async (req, res) => {
   }
 };
 
+exports.getSpots = async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT * FROM spots WHERE is_verified = 1");
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch pending spots" });
+  }
+};
+
 exports.approveSpot = async (req, res) => {
     const spotId = req.params.id;
     try {

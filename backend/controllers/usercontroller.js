@@ -85,12 +85,13 @@ exports.addReview = async (req, res) => {
       const [results] = await db.query(`
         SELECT 
           s.*, 
-          IFNULL(AVG(r.rating), 0) as avg_rating 
+          ROUND(AVG(r.rating), 1) AS average_rating,
+          COUNT(r.id) AS total_reviews
         FROM spots s
         LEFT JOIN reviews r ON s.id = r.spot_id
         WHERE s.is_verified = TRUE
         GROUP BY s.id
-        ORDER BY avg_rating DESC
+        ORDER BY average_rating DESC
         LIMIT 10;
       `);
       res.json(results);
@@ -99,41 +100,63 @@ exports.addReview = async (req, res) => {
       res.status(500).json({ error: "Failed to fetch top rated spots" });
     }
   };
+  
 
   exports.getSpotsbydistrict = async (req, res) => {
     const { district } = req.query;
-    let query = "SELECT * FROM spots WHERE is_verified = TRUE";
+  
+    let query = `
+      SELECT 
+        s.*, 
+        ROUND(AVG(r.rating), 1) AS average_rating,
+        COUNT(r.id) AS total_reviews
+      FROM spots s
+      LEFT JOIN reviews r ON s.id = r.spot_id
+      WHERE s.is_verified = TRUE
+    `;
     let params = [];
   
     if (district) {
-      query += " AND district = ?";
+      query += " AND s.district = ?";
       params.push(district);
     }
+  
+    query += " GROUP BY s.id ORDER BY average_rating DESC";
   
     try {
       const [spots] = await db.query(query, params);
       res.json(spots);
     } catch (err) {
       console.error(err);
-      res.status(500).json({ error: "Failed to fetch spots" });
+      res.status(500).json({ error: "Failed to fetch spots by district" });
     }
   };
+  
 
-exports.searchspot =  async (req, res) => {
-  const { query } = req.query; 
-
-  try {
-    const [spots] = await db.query(
-      'SELECT * FROM spots WHERE name LIKE ? AND is_verified = 1', 
-      [`%${query}%`] 
-    );
-    
-    res.json(spots);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to search spots" });
-  }
-};
+  exports.searchspot = async (req, res) => {
+    const { query: searchQuery } = req.query;
+  
+    try {
+      const [spots] = await db.query(
+        `SELECT 
+          s.*, 
+          ROUND(AVG(r.rating), 1) AS average_rating,
+          COUNT(r.id) AS total_reviews
+         FROM spots s
+         LEFT JOIN reviews r ON s.id = r.spot_id
+         WHERE s.name LIKE ? AND s.is_verified = 1
+         GROUP BY s.id
+         ORDER BY average_rating DESC`,
+        [`%${searchQuery}%`]
+      );
+  
+      res.json(spots);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Failed to search spots" });
+    }
+  };
+  
 
 
   exports.getProfile = async(req,res)=>{
