@@ -4,7 +4,7 @@ const { verifyToken } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
 const router = express.Router();
 
-router.post("/submitspot", verifyToken , upload.single('image'), submitspot)
+router.post("/submitspot", verifyToken , upload.array('images', 5), submitspot)
 router.post("/addreview",verifyToken, addReview)
 router.get("/getReviewsBySpot/:spotId",getReviewsBySpot)
 router.get("/searchspot", searchspot)

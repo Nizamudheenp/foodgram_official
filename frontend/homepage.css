@@ -1,4 +1,4 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -7,7 +7,8 @@
 
 /*common css start*/
 
-button , a.normal{
+button,
+a.normal {
     padding: 10px 20px;
     display: inline-block;
     text-decoration: none;
@@ -21,27 +22,30 @@ button , a.normal{
     cursor: pointer;
 
 }
-a.normal{
+
+a.normal {
     line-height: normal;
     border: 1px solid black;
     background-color: #fff;
 }
-a.normal:hover{
+
+a.normal:hover {
     color: #fff;
     background-color: #000;
 }
 
-.section-p1{
+.section-p1 {
     padding: 40px 80px;
 }
-.section-m1{
+
+.section-m1 {
     margin: 40px 0;
 }
 
 /*common css end*/
 
 /*header section start*/
-.header{
+.header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -49,29 +53,33 @@ a.normal:hover{
     height: 85px;
     padding: 5px 20px;
     z-index: 999;
-    position: fixed; 
+    position: fixed;
     top: 0;
     left: 0;
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
 }
-.logo{
+
+.logo {
     width: 60px;
     height: 60px;
     border-radius: 100%;
 }
-.dropdownmenu{
+
+.dropdownmenu {
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.dropdownmenu li{
+
+.dropdownmenu li {
     position: relative;
     list-style: none;
-    cursor: pointer; 
+    cursor: pointer;
 }
-.dropdownmenu a{
+
+.dropdownmenu a {
     color: #000;
     font-weight: bold;
     font-family: Courier, monospace;
@@ -80,9 +88,10 @@ a.normal:hover{
     margin: 1px;
     text-decoration: none;
     transition: all 0.5s ease;
-    
+
 }
-.dropdownmenu li:hover a{
+
+.dropdownmenu li:hover a {
     background: #222;
     color: #fff;
     border-radius: 5px;
@@ -102,14 +111,15 @@ a.normal:hover{
 }
 
 
-#logoutBtn{
+#logoutBtn {
     background: #000;
     color: #fff;
     margin: 0 10px;
     transition: 0.3s ease;
 }
-.dropdownmenu #logoutBtn:hover{
-    background-color:rgb(223, 219, 219);
+
+.dropdownmenu #logoutBtn:hover {
+    background-color: rgb(223, 219, 219);
     color: #000;
     border: 1px solid #000;
 }
@@ -134,7 +144,7 @@ a.normal:hover{
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 6px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -171,7 +181,7 @@ a.normal:hover{
 
 /*login section start*/
 
-.login-popup{
+.login-popup {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -185,20 +195,22 @@ a.normal:hover{
     background-repeat: no-repeat;
     background-position: center;
     background-size: 75%;
-    display: none; 
+    display: none;
     z-index: 1000;
     border-radius: 5px;
 }
-.login-popup h2{
+
+.login-popup h2 {
     color: #fff;
     text-align: center;
-    text-transform: uppercase;    
+    text-transform: uppercase;
 }
-.login-popup input{
+
+.login-popup input {
     width: 100%;
     height: 50px;
     padding: 10px;
-    border-radius: 5px;            
+    border-radius: 5px;
     margin: 3px 0;
     outline: none;
     box-sizing: border-box;
@@ -206,11 +218,13 @@ a.normal:hover{
     font-weight: 600;
     background: rgba(81, 86, 81, 0.595);
 }
-.login-popup input::placeholder{
+
+.login-popup input::placeholder {
     color: #848882;
     font-size: 15px;
 }
-.login-popup button{
+
+.login-popup button {
     margin: 5px 0;
     padding: 7px 10px;
     background: rgba(81, 86, 81, 0.595);
@@ -227,14 +241,15 @@ a.normal:hover{
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    display: none; 
+    display: none;
     z-index: 999;
-  }
+}
+
 /*login section end*/
 
 /* register section start */
 
-.register-popup{
+.register-popup {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -248,20 +263,22 @@ a.normal:hover{
     background-repeat: no-repeat;
     background-position: center;
     background-size: 75%;
-    display: none; 
+    display: none;
     z-index: 1000;
     border-radius: 5px;
 }
-.register-popup h2{
+
+.register-popup h2 {
     color: #fff;
     text-align: center;
-    text-transform: uppercase;    
+    text-transform: uppercase;
 }
-.register-popup input{
+
+.register-popup input {
     width: 100%;
     height: 50px;
     padding: 10px;
-    border-radius: 5px;            
+    border-radius: 5px;
     margin: 3px 0;
     outline: none;
     box-sizing: border-box;
@@ -269,11 +286,13 @@ a.normal:hover{
     font-weight: 600;
     background: rgba(81, 86, 81, 0.595);
 }
-.register-popup input::placeholder{
+
+.register-popup input::placeholder {
     color: #848882;
     font-size: 15px;
 }
-.register-popup button{
+
+.register-popup button {
     margin: 5px 0;
     padding: 7px 10px;
     background: rgba(81, 86, 81, 0.595);
@@ -301,10 +320,10 @@ a.normal:hover{
         background: rgb(223, 219, 219);
         display: none;
         padding: 15px 0;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     }
 
-    #menu-toggle:checked ~ .dropdownmenu {
+    #menu-toggle:checked~.dropdownmenu {
         display: flex;
     }
 
@@ -318,16 +337,27 @@ a.normal:hover{
         display: block;
         padding: 15px;
     }
+
     .user-dropdown {
         position: absolute;
-        left:0 ;
+        left: 0;
+    }
+
+    .login-popup {
+        width: 350px;
+        height: 250px;
+
+    }
+    .register-popup {
+        width: 350px;
+        height: 350px;
     }
 }
 
 /*header section end*/
 
 /*main section start*/
-.name{
+.name {
     position: relative;
     width: 100%;
     height: 100vh;
@@ -335,27 +365,30 @@ a.normal:hover{
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: linear-gradient( rgba(12, 12, 12, 0.2),rgba(10, 10, 10, 0.2)), url(bgimages/mainbg.jpg);
+    background: linear-gradient(rgba(12, 12, 12, 0.2), rgba(10, 10, 10, 0.2)), url(bgimages/mainbg.jpg);
     background-size: cover;
     background-position: center;
     text-align: center;
     padding: 20px;
     box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.2);
 }
-.name h1{
+
+.name h1 {
     font-size: 80px;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     color: #fff;
     text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
     margin-bottom: 20px;
 }
-.name p{
+
+.name p {
     color: #fff;
     font-size: 26px;
     max-width: 800px;
     line-height: 1.5;
     text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
 }
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .name h1 {
@@ -377,11 +410,12 @@ a.normal:hover{
         font-size: 16px;
     }
 }
+
 /* main section end */
 
 /*story section start*/
 
-.container-1{
+.container-1 {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -395,6 +429,7 @@ a.normal:hover{
     -webkit-backdrop-filter: blur(12px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
+
 .container-1 h1 {
     font-size: 48px;
     font-weight: 700;
@@ -402,6 +437,7 @@ a.normal:hover{
     color: #1a1a1a;
     text-align: center;
 }
+
 .container-1 p {
     padding: 0 20px;
     font-size: 20px;
@@ -415,6 +451,7 @@ a.normal:hover{
     color: #c0392b;
     font-weight: bold;
 }
+
 @media (max-width: 768px) {
     .container-1 {
         padding: 30px 15px;
@@ -433,7 +470,7 @@ a.normal:hover{
 
 /*spot section start*/
 
-#spot-home{
+#spot-home {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -442,6 +479,7 @@ a.normal:hover{
     padding: 60px 40px;
     margin-top: 20px;
 }
+
 #spot-home h1 {
     width: 100%;
     font-size: 42px;
@@ -451,13 +489,14 @@ a.normal:hover{
     font-family: 'Georgia', serif;
     text-shadow: 1px 1px #ccc;
 }
-.main-spot{
+
+.main-spot {
     width: 48%;
     margin-bottom: 30px;
     background-color: rgba(255, 255, 255, 0.75);
     padding: 25px;
     border-radius: 15px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     transform: translateY(30px);
     animation: fadeInUp 1s forwards;
@@ -467,26 +506,30 @@ a.normal:hover{
 .main-spot:nth-child(even) {
     animation-delay: 0.2s;
 }
+
 .main-spot:nth-child(odd) {
     animation-delay: 0.4s;
 }
+
 .main-spot:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
 }
 
-.main-spot h2{
+.main-spot h2 {
     font-size: 24px;
     color: #333;
     margin-bottom: 10px;
 }
-.main-spot p{
+
+.main-spot p {
     font-size: 16px;
     font-style: italic;
     color: #555;
     line-height: 1.6;
 }
-.main-spot button{
+
+.main-spot button {
     padding: 0;
 }
 
@@ -511,7 +554,7 @@ a.normal:hover{
 
 /*footer section start*/
 
-footer{
+footer {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -520,13 +563,15 @@ footer{
     padding: 40px 60px 20px;
     gap: 30px;
 }
-footer .col{
+
+footer .col {
     flex: 1 1 250px;
     display: flex;
     flex-direction: column;
     gap: 10px;
 
 }
+
 footer h4 {
     font-size: 20px;
     margin-bottom: 10px;
@@ -543,6 +588,7 @@ footer h4::after {
     height: 3px;
     background-color: #f9a825;
 }
+
 footer p,
 footer a {
     font-size: 15px;
@@ -550,6 +596,7 @@ footer a {
     text-decoration: none;
     transition: color 0.3s ease;
 }
+
 footer a:hover,
 footer .follow i:hover {
     color: #f9a825;
@@ -595,6 +642,7 @@ footer .copyright {
 footer .icon i {
     transition: transform 0.3s ease;
 }
+
 footer .icon i:hover {
     transform: scale(1.3);
 }

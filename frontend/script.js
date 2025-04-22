@@ -138,7 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.role === 'admin') {
                     adminBtn.classList.remove('hidden');
                     adminBtn.onclick = () => {
-                        console.log("Admin button clicked");
                         window.location.href = '/frontend/admindashboard.html';
                     };
                 } else {
@@ -173,6 +172,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageEl = document.getElementById('submitMessage');
 
     if (form && messageEl) {
+
+        const imageInput = form.querySelector('[name="images"]');
+        const fileLabelText = document.getElementById('fileLabelText');
+        const imagePreview = document.getElementById('imagePreview');
+        let selectedImages = [];
+        imageInput.addEventListener('change', () => {
+            const newFiles = Array.from(imageInput.files);
+            selectedImages = [...selectedImages, ...newFiles];
+
+            if (selectedImages.length > 5) {
+                alert('You can only upload up to 5 images.');
+                selectedImages = selectedImages.slice(0, 5);
+            }
+            imageInput.value = '';
+            fileLabelText.textContent = `${selectedImages.length} images selected`; imagePreview.innerHTML = '';
+            imagePreview.innerHTML = '';
+            selectedImages.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const img = document.createElement('img');
+                    img.src = reader.result;
+                    img.className = 'preview-thumb';
+                    imagePreview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -181,8 +209,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            const formData = new FormData(form);
+            const formData = new FormData();
             const token = localStorage.getItem('token');
+            const name = form.querySelector('[name="name"]').value;
+            const description = form.querySelector('[name="description"]').value;
+            const district = form.querySelector('[name="district"]').value;
+            const location = form.querySelector('[name="location"]').value;
+            formData.append('name', name);
+            formData.append('description', description);
+            formData.append('district', district);
+            formData.append('location', location);
+
+            selectedImages.forEach(file => {
+                formData.append('images', file);
+            });
+
 
             try {
                 const response = await fetch(`${BASE_URL}/api/user/submitspot`, {
@@ -198,6 +239,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     messageEl.textContent = result.message;
                     form.reset();
+                    selectedImages = [];
+                    imagePreview.innerHTML = '';
+                    fileLabelText.textContent = 'Choose up to 5 images';
                 } else {
                     messageEl.textContent = result.message || 'Something went wrong!';
                 }
@@ -293,39 +337,71 @@ document.addEventListener('DOMContentLoaded', () => {
                 const rating = parseFloat(result.average_rating) || 0;
                 const totalReviews = result.total_reviews || 0;
                 const starsHTML = getStarHTML(rating);
+                const images = result.images ? result.images.split(',') : [];
+                const carouselId = 'carousel-' + result.id;
+
+                const carouselHTML = images.length > 0 ? `
+                <div id="${carouselId}" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        ${images.map((img, i) => `
+                            <div class="carousel-item ${i === 0 ? 'active' : ''}">
+                                <img src="${img.trim()}" class="d-block w-100" style="max-height: 250px; object-fit: cover;" alt="Spot Image">
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${images.length > 1 ? `
+                        <button class="carousel-control-prev" type="button" data-bs-target="#${carouselId}" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#${carouselId}" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </button>
+                        
+                    ` : ''}
+                </div>
+            ` : '';
 
                 card.innerHTML = `
-                    <img src="${result.image}" alt="${result.name}" class="spot-img">
+                     ${carouselHTML}
                     <div class="spot-details">
                         <h3>${result.name}</h3>
                         <p><strong>District:</strong> ${result.district}</p>
                         <p><strong>Location:</strong> ${result.location}</p>
                         <div class="star-rating">
-                           ${starsHTML} <span class="rating-number">${rating}  (${totalReviews} reviews${totalReviews === 1 ? '' : 's'})</span>
+                           ${starsHTML} <span class="rating-number">${rating}  (${totalReviews} review${totalReviews === 1 ? '' : 's'})</span>
                         </div>
                         <p>${result.description || ''}</p>
                     </div>
                 `;
-                card.addEventListener('click', () => openReviewModal(result.id));
+                card.addEventListener('click', (e) => {
+                    // Check if the click is NOT inside the carousel (image part)
+                    if (!e.target.closest('.carousel')) {
+                        openReviewModal(result.id);
+                    }
+                });
+                
                 spotContainer.appendChild(card);
             });
+
         }
+
 
         function getStarHTML(rating) {
             const fullStars = Math.floor(rating);
             const halfStar = rating % 1 >= 0.5;
             let stars = '';
-        
+
             for (let i = 0; i < fullStars; i++) stars += '<span class="star full">★</span>';
             if (halfStar) stars += '<span class="star half">★</span>';
             for (let i = fullStars + (halfStar ? 1 : 0); i < 5; i++) stars += '<span class="star empty">☆</span>';
-        
+
             return stars;
         }
-        
+
     }
 
     const reviewModal = document.getElementById('reviewModal');
+
     const closeReviewModal = document.getElementById('closeReviewModal');
     const starRating = document.getElementById('starRating');
     const reviewComment = document.getElementById('reviewComment');
@@ -343,6 +419,10 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedRating = 0;
         reviewComment.value = '';
         renderStarInputs();
+
+        const modal = new bootstrap.Modal(document.getElementById('reviewModal'));
+        modal.show();
+
 
         try {
             const res = await fetch(`${BASE_URL}/api/user/getReviewsBySpot/${spotId}`, {
@@ -542,8 +622,30 @@ document.addEventListener('DOMContentLoaded', () => {
         spots.forEach(spot => {
             const card = document.createElement('div');
             card.className = 'pending-spot-card';
+            const carouselId = 'carousel-' + spot.id;
+            const images = spot.images ? spot.images.split(',') : [];
+
+            const carouselHTML = images.length > 0 ? `
+            <div id="${carouselId}" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    ${images.map((img, i) => `
+                    <div class="carousel-item ${i === 0 ? 'active' : ''}">
+                        <img src="${img.trim()}" class="d-block w-100" style="max-height: 250px; object-fit: cover;" alt="Spot Image">
+                    </div>
+                    `).join('')}
+                </div>
+                ${images.length > 1 ? `
+                <button class="carousel-control-prev" type="button" data-bs-target="#${carouselId}" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#${carouselId}" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </button>
+                ` : ''}
+            </div>` : '';
+
             card.innerHTML = `
-            <img src="${spot.image}" alt="${spot.name}" class="pending-img">
+            ${carouselHTML}
             <div class="pending-details">
                 <h3>${spot.name}</h3>
                 <p><strong>District:</strong> ${spot.district}</p>
@@ -563,8 +665,31 @@ document.addEventListener('DOMContentLoaded', () => {
         spots.forEach(spot => {
             const card = document.createElement('div');
             card.className = 'pending-spot-card';
+            const carouselId = 'carousel-' + spot.id;
+            const images = spot.images ? spot.images.split(',') : [];
+
+            const carouselHTML = images.length > 0 ? `
+        <div id="${carouselId}" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                ${images.map((img, i) => `
+                <div class="carousel-item ${i === 0 ? 'active' : ''}">
+                    <img src="${img.trim()}" class="d-block w-100" style="max-height: 250px; object-fit: cover;" alt="Spot Image">
+                </div>
+                `).join('')}
+            </div>
+            ${images.length > 1 ? `
+            <button class="carousel-control-prev" type="button" data-bs-target="#${carouselId}" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#${carouselId}" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </button>
+            ` : ''}
+        </div>` : '';
+
+
             card.innerHTML = `
-            <img src="${spot.image}" alt="${spot.name}" class="pending-img">
+            ${carouselHTML}
             <div class="pending-details">
                 <h3>${spot.name}</h3>
                 <p><strong>District:</strong> ${spot.district}</p>

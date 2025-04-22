@@ -2,7 +2,13 @@ const db = require('../db');
 
 exports.getPendingSpots = async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT * FROM spots WHERE is_verified = 0");
+    const [rows] = await db.query(`
+      SELECT s.*, GROUP_CONCAT(si.image_url) AS images
+      FROM spots s
+      LEFT JOIN spot_images si ON s.id = si.spot_id
+      WHERE s.is_verified = 0
+      GROUP BY s.id
+    `);
     res.json(rows);
   } catch (err) {
     console.error(err);
@@ -10,15 +16,23 @@ exports.getPendingSpots = async (req, res) => {
   }
 };
 
-exports.getSpots = async (req, res) => {
+
+exports.getApprovedSpots = async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT * FROM spots WHERE is_verified = 1");
+    const [rows] = await db.query(`
+      SELECT s.*, GROUP_CONCAT(si.image_url) AS images
+      FROM spots s
+      LEFT JOIN spot_images si ON s.id = si.spot_id
+      WHERE s.is_verified = 1
+      GROUP BY s.id
+    `);
     res.json(rows);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Failed to fetch pending spots" });
+    res.status(500).json({ error: "Failed to fetch approved spots" });
   }
 };
+
 
 exports.approveSpot = async (req, res) => {
     const spotId = req.params.id;

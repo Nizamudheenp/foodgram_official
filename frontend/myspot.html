@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -40,10 +39,15 @@
         <textarea name="description" placeholder="Description" required></textarea>
         <input type="text" name="district" placeholder="District" required>
         <input type="text" name="location" placeholder="Location" required>
-        <input type="file" name="image" accept="image/*">
+        <label for="imageInput" class="custom-file-label">
+        <span id="fileLabelText">Choose up to 5 images</span>
+        </label>
+        <input type="file" id="imageInput" name="images" multiple accept="image/*" class="hidden">
+        <div id="imagePreview" class="image-preview-container"></div>
+
         <button type="submit">Submit Spot</button>
     </form>
-    
+
     <p id="submitMessage"></p>
 
     <div class="overlay"></div>

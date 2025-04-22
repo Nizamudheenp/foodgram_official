@@ -32,18 +32,23 @@
 }
 
 #searchBtn {
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  padding: 10px 20px;
+  display: inline-block;
+  text-decoration: none;
+  background-color: #e0e0e0;
+  color: #000;
   font-size: 16px;
+  border-radius: 4px;
+  font-weight: 600;
+  border: none;
+  transition: 0.5s;
+  cursor: pointer;
+
 }
 
 #searchBtn:hover {
-  background-color: #0056b3;
+  color: #fff;
+  background-color: #000;
 }
 
 .filter-btn {
@@ -61,7 +66,7 @@
 }
 
 .filter-btn.active {
-  background-color: #007bff;
+  background-color: #000;
   color: white;
 }
 
@@ -142,7 +147,7 @@
 }
 
 #reviewList {
-  margin-top: 20px;
+  margin-top: 15px;
   padding: 0;
 }
 
@@ -211,13 +216,8 @@
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.6);
-}
+  overflow: auto;}
 
-.modal.hidden {
-  display: none;
-}
 
 .modal-content {
   background-color: #fff;
@@ -225,14 +225,20 @@
   border-radius: 12px;
   max-width: 450px;
   width: 90%;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
   position: relative;
-  animation: slideIn 0.3s ease-out;
+  animation: slideInFromBottom 0.5s ease-out;
+  margin: 0 auto;
 }
 
-@keyframes slideIn {
-  from { transform: translateY(-30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+@keyframes slideInFromBottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .modal-content h3 {
@@ -240,20 +246,6 @@
   font-size: 1.5rem;
   color: #333;
   text-align: center;
-}
-
-.close-btn {
-  position: absolute;
-  right: 15px;
-  top: 10px;
-  font-size: 24px;
-  cursor: pointer;
-  color: #666;
-  transition: color 0.2s;
-}
-
-.close-btn:hover {
-  color: #000;
 }
 
 /* Star Input Styling */
@@ -366,8 +358,8 @@
   }
   
   #submitSpotForm button {
-    background-color: #28a745;
-    color: white;
+    color: #fff;
+    background-color: #000;
     padding: 12px;
     font-size: 1rem;
     border: none;
@@ -377,7 +369,7 @@
   }
   
   #submitSpotForm button:hover {
-    background-color: #218838;
+    background-color: #3f3737;
   }
   
   #submitMessage {
@@ -387,8 +379,40 @@
     color: #333;
   }
 
+  .image-preview-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .custom-file-label {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #f1f1f1;
+    color: #333;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .preview-thumb {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    margin: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  
+
   /* Container for all pending spots */
-#pendingSpotsContainer {
+#pendingSpotsContainer ,#approvedSpotsContainer{
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
