@@ -71,9 +71,9 @@
         <div class="filters">
             <input type="text" id="searchInput" placeholder="Search by name..." />
             <button id="searchBtn">Search</button>
-            <button class="filter-btn active" id="topRatedBtn" >Top Rated</button>
+            <button class="filter-btn active" id="topRatedBtn">Top Rated</button>
             <button class="filter-btn" id="districtBtn">By District</button>
-            
+
             <select id="districtSelect" class="hidden">
                 <option value="">--Select District--</option>
                 <option value="Alappuzha">Alappuzha</option>
@@ -99,28 +99,29 @@
     </section>
 
     <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg"> 
-        <div class="modal-content">
-            <button type="button" class="btn-close ms-auto me-2 mt-2" data-bs-dismiss="modal" aria-label="Close"></button>
-            <h3>Add Review</h3>
-          <div class="star-input" id="starRating">
-            <!-- Stars will be generated here -->
-          </div>
-          <textarea id="reviewComment" placeholder="Write your comment..."></textarea>
-          <button id="submitReviewBtn">Submit Review</button>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <button type="button" class="btn-close ms-auto me-2 mt-2" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+                <h3>Add Review</h3>
+                <div class="star-input" id="starRating">
+                    <!-- Stars will be generated here -->
+                </div>
+                <textarea id="reviewComment" placeholder="Write your comment..."></textarea>
+                <button id="submitReviewBtn">Submit Review</button>
 
-          <h4 style="margin-top:20px">Reviews</h4>
-          <div id="reviewList">
-            <!-- Reviews will be loaded here dynamically -->
-          </div>
+                <h4 style="margin-top:20px">Reviews</h4>
+                <div id="reviewList">
+                    <!-- Reviews will be loaded here dynamically -->
+                </div>
+            </div>
         </div>
     </div>
-      </div>
-      
-    
-      <script src="config.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-      <script src="script.js"></script>
+
+
+    <script src="config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>

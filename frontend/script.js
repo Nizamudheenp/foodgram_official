@@ -10,29 +10,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showAlert(type, title, text) {
         Swal.fire({
-          icon: type, 
-          title: title,
-          text: text,
-          confirmButtonColor: '#3085d6',
+            icon: type,
+            title: title,
+            text: text,
+            confirmButtonColor: '#3085d6',
         });
-      }
+    }
 
-      function showConfirmAlert(text, callback) {
+    function showConfirmAlert(text, callback) {
         Swal.fire({
-          title: 'Are you sure?',
-          text: text,
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#d33',
-          cancelButtonColor: '#3085d6',
-          confirmButtonText: 'Yes, do it!'
+            title: 'Are you sure?',
+            text: text,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, do it!'
         }).then((result) => {
-          if (result.isConfirmed) {
-            callback();
-          }
+            if (result.isConfirmed) {
+                callback();
+            }
         });
-      }
-      
+    }
+
 
     const showModal = (modal) => {
         modal.style.display = 'block';
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const confirmPassword = document.getElementById('regConfirmPassword')?.value;
 
             if (password !== confirmPassword) {
-                showAlert('error', 'Password mismatch', "Passwords don't match");                return;
+                showAlert('error', 'Password mismatch', "Passwords don't match"); return;
             }
 
             try {
@@ -405,7 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         openReviewModal(result.id);
                     }
                 });
-                
+
                 spotContainer.appendChild(card);
             });
 
@@ -690,19 +690,19 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.edit-btn').forEach(button => {
             button.addEventListener('click', () => {
                 const spotId = button.dataset.id;
-                const card = button.closest('.pending-spot-card'); 
-        
+                const card = button.closest('.pending-spot-card');
+
                 const name = card.querySelector('h3').textContent;
                 const district = card.querySelector('p:nth-of-type(1)').textContent.split(': ')[1];
                 const location = card.querySelector('p:nth-of-type(2)').textContent.split(': ')[1];
                 const description = card.querySelector('p:nth-of-type(3)').textContent;
-        
+
                 document.getElementById('editName').value = name;
                 document.getElementById('editDistrict').value = district;
                 document.getElementById('editLocation').value = location;
                 document.getElementById('editDescription').value = description;
                 document.getElementById('editSpotId').value = spotId;
-        
+
                 const editModal = new bootstrap.Modal(document.getElementById('editSpotModal'));
                 editModal.show();
             });
@@ -710,13 +710,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('editSpotForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-        
+
             const spotId = document.getElementById('editSpotId').value;
             const name = document.getElementById('editName').value;
             const district = document.getElementById('editDistrict').value;
             const location = document.getElementById('editLocation').value;
             const description = document.getElementById('editDescription').value;
-        
+
             try {
                 const res = await fetch(`${BASE_URL}/api/admin/edit-spot/${spotId}`, {
                     method: 'PUT',
@@ -726,9 +726,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     body: JSON.stringify({ name, district, location, description })
                 });
-        
+
                 const data = await res.json();
-        
+
                 if (res.ok) {
                     showAlert('success', 'Success', data.message || 'Spot updated');
                 } else {
@@ -739,7 +739,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Server error');
             }
         });
-        
+
 
         addDeleteHandlers('.delete-btn', approvedSpotsContainer);
     }
@@ -812,8 +812,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         addDeleteHandlers('.delete-btn', pendingSpotsContainer);
     }
-   
-    
+
+
 
     function addDeleteHandlers(selector, container) {
         container.querySelectorAll(selector).forEach(button => {
