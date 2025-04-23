@@ -5,9 +5,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login');
     const registerForm = document.getElementById('register');
     const goToRegisterBtn = document.getElementById('go-to-register');
+    const goToLoginBtn = document.getElementById('go-to-login');
     const loginPopup = document.getElementById('loginForm');
     const registerPopup = document.getElementById('registerForm');
     const overlay = document.querySelector('.overlay');
+
+    function showAlert(type, title, text) {
+        Swal.fire({
+          icon: type, 
+          title: title,
+          text: text,
+          confirmButtonColor: '#3085d6',
+        });
+      }
+
+      function showConfirmAlert(text, callback) {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: text,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'Yes, do it!'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            callback();
+          }
+        });
+      }
+      
 
     const showModal = (modal) => {
         modal.style.display = 'block';
@@ -25,11 +52,16 @@ document.addEventListener('DOMContentLoaded', () => {
         showModal(loginPopup);
     };
 
-    if (goToRegisterBtn && loginPopup && registerPopup) {
+    if (goToRegisterBtn && goToLoginBtn && loginPopup && registerPopup) {
         goToRegisterBtn.addEventListener('click', (e) => {
             e.preventDefault();
             hideModals();
             showModal(registerPopup);
+        });
+        goToLoginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            hideModals();
+            showModal(loginPopup);
         });
 
         overlay?.addEventListener('click', hideModals);
@@ -45,8 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const confirmPassword = document.getElementById('regConfirmPassword')?.value;
 
             if (password !== confirmPassword) {
-                alert('Passwords do not match');
-                return;
+                showAlert('error', 'Password mismatch', "Passwords don't match");                return;
             }
 
             try {
@@ -59,14 +90,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await res.json();
 
                 if (res.ok) {
-                    alert('Registration successful. Please login.');
+                    showAlert('success', 'Registration successful', 'Please login now.');
                     showLogin();
                 } else {
-                    alert(data.message || 'Registration failed');
+                    showAlert('error', 'Registration failed', data.message || 'Something went wrong.');
                 }
             } catch (err) {
                 console.error('Registration error:', err);
-                alert('Something went wrong');
+                showAlert('error', 'Error', 'Something went wrong');
             }
         });
     }
@@ -89,14 +120,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (res.ok) {
                     localStorage.setItem('token', data.token);
-                    alert('Login successful!');
+                    showAlert('success', 'Login successful', 'Welcome back!');
                     hideModals();
                 } else {
-                    alert(data.message || 'Login failed');
+                    showAlert('error', 'Login failed', data.message || 'Invalid credentials');
                 }
             } catch (err) {
                 console.error('Login error:', err);
-                alert('Something went wrong');
+                showAlert('error', 'Error', 'Something went wrong');
             }
         });
     }
@@ -144,18 +175,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     adminBtn.classList.add('hidden');
                 }
             } else {
-                alert('Failed to load profile');
+                showAlert('error', 'Profile Load Failed', 'Something went wrong while loading your profile.');
             }
         } catch (err) {
             console.error('Error loading profile:', err);
-            alert('Server error');
+            showAlert('error', 'Server Error', 'There was a problem with the server. Please try again later.');
         }
     });
 
     logoutBtn?.addEventListener('click', () => {
         localStorage.removeItem('token');
-        alert('Logged out!');
-        location.reload();
+        showAlert('success', 'Logged out!', 'You have successfully logged out.').then(() => location.reload());
     });
 
     adminBtn?.addEventListener('click', () => {
@@ -169,9 +199,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const form = document.getElementById('submitSpotForm');
-    const messageEl = document.getElementById('submitMessage');
 
-    if (form && messageEl) {
+    if (form) {
 
         const imageInput = form.querySelector('[name="images"]');
         const fileLabelText = document.getElementById('fileLabelText');
@@ -182,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedImages = [...selectedImages, ...newFiles];
 
             if (selectedImages.length > 5) {
-                alert('You can only upload up to 5 images.');
+                showAlert('warning', 'Image Limit Exceeded', 'You can only upload up to 5 images.');
                 selectedImages = selectedImages.slice(0, 5);
             }
             imageInput.value = '';
@@ -237,17 +266,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 const result = await response.json();
 
                 if (response.ok) {
-                    messageEl.textContent = result.message;
+                    showAlert('success', 'Spot Submitted', result.message);
                     form.reset();
                     selectedImages = [];
                     imagePreview.innerHTML = '';
                     fileLabelText.textContent = 'Choose up to 5 images';
                 } else {
-                    messageEl.textContent = result.message || 'Something went wrong!';
+                    showAlert('error', 'Submission Failed', result.message || 'Something went wrong! Please try again.');
                 }
             } catch (error) {
                 console.error('Error submitting spot:', error);
-                messageEl.textContent = 'Server error. Try again.';
+                showAlert('error', 'Server Error', 'There was a problem with the server. Please try again later.');
             }
         });
     }
@@ -270,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await response.json();
                 displaySpots(data || []);
             } catch (error) {
-                console.error('Failed to fetch top-rated spots on load:', error);
+                showAlert('error', 'Failed to fetch top-rated spots on load', 'There was an issue fetching the top-rated spots.');
             }
         })();
 
@@ -283,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await response.json();
                 displaySpots(data || []);
             } catch (error) {
-                console.error('Search failed:', error);
+                showAlert('error', 'Search failed', 'There was an issue searching for the spot.');
             }
         });
 
@@ -296,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await response.json();
                 displaySpots(data || []);
             } catch (error) {
-                console.error('Failed to fetch top-rated spots:', error);
+                showAlert('error', 'Failed to fetch top-rated spots', 'There was an issue fetching the top-rated spots.');
             }
         });
 
@@ -315,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const data = await response.json();
                     displaySpots(data || []);
                 } catch (error) {
-                    console.error('Failed to fetch spots by district:', error);
+                    showAlert('error', 'Failed to fetch spots by district', 'There was an issue fetching spots for the selected district.');
                 }
             }
         });
@@ -374,7 +403,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
                 card.addEventListener('click', (e) => {
-                    // Check if the click is NOT inside the carousel (image part)
                     if (!e.target.closest('.carousel')) {
                         openReviewModal(result.id);
                     }
@@ -412,8 +440,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function openReviewModal(spotId) {
         const token = localStorage.getItem('token');
-        if (!token) return alert("You must be logged in to add a review.");
-
+        if (!token) {
+            showAlert('warning', 'Login Required', 'You must be logged in to add a review.');
+            return;
+        }
         reviewModal.classList.remove('hidden');
         currentSpotId = spotId;
         selectedRating = 0;
@@ -437,10 +467,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res.ok) {
                 displayReviews(result);
             } else {
-                console.error("Failed to load reviews:", result.message);
+                showAlert('error', 'Failed to load reviews', 'There was an issue loading the reviews.');
             }
         } catch (err) {
-            console.error("Error fetching reviews:", err);
+            showAlert('error', 'Error fetching reviews', 'There was an issue fetching the reviews.');
         }
     }
 
@@ -496,7 +526,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
 
             if (selectedRating === 0 || !comment) {
-                return alert("Please select a rating and write a comment.");
+                showAlert('warning', 'Incomplete Review', 'Please select a rating and write a comment.');
+                return;
             }
 
             try {
@@ -516,7 +547,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const result = await res.json();
 
                 if (res.ok) {
-                    alert("Review submitted successfully!");
+                    showAlert('success', 'Review Submitted', 'Your review has been submitted successfully!');
 
                     const updated = await fetch(`${BASE_URL}/api/user/getReviewsBySpot/${currentSpotId}`, {
                         method: 'GET',
@@ -532,11 +563,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     selectedRating = 0;
                     renderStarInputs();
                 } else {
-                    alert(result.message || "Failed to submit review.");
+                    showAlert('error', 'Review Submission Failed', result.message || 'Failed to submit review.');
                 }
             } catch (err) {
                 console.error("Review submission failed", err);
-                alert("Error occurred while submitting review.");
+                showAlert('error', 'Error', 'There was an issue submitting the review.');
             }
         });
     }
@@ -559,7 +590,7 @@ document.addEventListener('DOMContentLoaded', () => {
             pendingSpotsContainer.innerHTML = '';
 
             if (!token) {
-                alert('You must be logged in as an admin to view pending spots.');
+                showAlert('error', 'Access Denied', 'You must be logged in as an admin to view pending spots.');
                 return window.location.href = '/frontend/homepage.html';
             }
 
@@ -593,7 +624,7 @@ document.addEventListener('DOMContentLoaded', () => {
             approvedSpotsContainer.innerHTML = '';
 
             if (!token) {
-                alert('You must be logged in as an admin to view all spots.');
+                showAlert('error', 'Access Denied', 'You must be logged in as an admin to view all spots.');
                 return window.location.href = '/frontend/homepage.html';
             }
 
@@ -651,11 +682,66 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p><strong>District:</strong> ${spot.district}</p>
                 <p><strong>Location:</strong> ${spot.location}</p>
                 <p>${spot.description || ''}</p>
+                <button class="edit-btn" data-id="${spot.id}">Edit</button>
                 <button class="delete-btn" data-id="${spot.id}">Delete</button>
             </div>
         `;
             approvedSpotsContainer.appendChild(card);
         });
+
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const spotId = button.dataset.id;
+                const card = button.closest('.pending-spot-card'); 
+        
+                const name = card.querySelector('h3').textContent;
+                const district = card.querySelector('p:nth-of-type(1)').textContent.split(': ')[1];
+                const location = card.querySelector('p:nth-of-type(2)').textContent.split(': ')[1];
+                const description = card.querySelector('p:nth-of-type(3)').textContent;
+        
+                document.getElementById('editName').value = name;
+                document.getElementById('editDistrict').value = district;
+                document.getElementById('editLocation').value = location;
+                document.getElementById('editDescription').value = description;
+                document.getElementById('editSpotId').value = spotId;
+        
+                const editModal = new bootstrap.Modal(document.getElementById('editSpotModal'));
+                editModal.show();
+            });
+        });
+
+        document.getElementById('editSpotForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+        
+            const spotId = document.getElementById('editSpotId').value;
+            const name = document.getElementById('editName').value;
+            const district = document.getElementById('editDistrict').value;
+            const location = document.getElementById('editLocation').value;
+            const description = document.getElementById('editDescription').value;
+        
+            try {
+                const res = await fetch(`${BASE_URL}/api/admin/edit-spot/${spotId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ name, district, location, description })
+                });
+        
+                const data = await res.json();
+        
+                if (res.ok) {
+                    showAlert('success', 'Success', data.message || 'Spot updated');
+                } else {
+                    showAlert('error', 'Error', 'Server error');
+                }
+            } catch (err) {
+                console.error('Error updating spot:', err);
+                alert('Server error');
+            }
+        });
+        
 
         addDeleteHandlers('.delete-btn', approvedSpotsContainer);
     }
@@ -714,49 +800,49 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                     const data = await res.json();
                     if (res.ok) {
-                        alert(data.message || 'Spot approved.');
+                        showAlert('success', 'Success', data.message || 'Spot approved.');
                         button.closest('.pending-spot-card').remove();
                     } else {
-                        alert(data.message || 'Approval failed.');
+                        showAlert('error', 'Error', data.message || 'Approval failed.');
                     }
                 } catch (err) {
                     console.error('Error approving spot:', err);
-                    alert('Server error while approving.');
+                    showAlert('error', 'Error', 'Server error while approving.');
                 }
             });
         });
 
         addDeleteHandlers('.delete-btn', pendingSpotsContainer);
     }
+   
+    
 
     function addDeleteHandlers(selector, container) {
         container.querySelectorAll(selector).forEach(button => {
-            button.addEventListener('click', async () => {
-                const spotId = button.getAttribute('data-id');
-                const confirmDelete = confirm('Are you sure you want to delete this spot?');
+            button.addEventListener('click', () => {
+                showConfirmAlert('Are you sure you want to delete this spot?', async () => {
+                    const spotId = button.getAttribute('data-id');
+                    try {
+                        const res = await fetch(`${BASE_URL}/api/admin/delete-spot/${spotId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                Authorization: `Bearer ${token}`
+                            }
+                        });
 
-                if (!confirmDelete) return;
-
-                try {
-                    const res = await fetch(`${BASE_URL}/api/admin/delete-spot/${spotId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            Authorization: `Bearer ${token}`
+                        const data = await res.json();
+                        if (res.ok) {
+                            showAlert('success', 'Success', data.message || 'Spot deleted.');
+                            button.closest('.pending-spot-card').remove();
+                        } else {
+                            showAlert('error', 'Error', data.message || 'Failed to delete spot.');
                         }
-                    });
 
-                    const data = await res.json();
-                    if (res.ok) {
-                        alert(data.message || 'Spot deleted.');
-                        button.closest('.pending-spot-card').remove();
-                    } else {
-                        alert(data.message || 'Failed to delete spot.');
+                    } catch (err) {
+                        console.error('Error deleting spot:', err);
+                        showAlert('error', 'Error', 'Server error while deleting.');
                     }
-
-                } catch (err) {
-                    console.error('Error deleting spot:', err);
-                    alert('Server error while deleting.');
-                }
+                });
             });
         });
     }

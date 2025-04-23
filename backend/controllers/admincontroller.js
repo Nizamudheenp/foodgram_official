@@ -48,6 +48,24 @@ exports.approveSpot = async (req, res) => {
     }
   };
 
+  exports.editSpot = async (req,res)=>{
+    const spotId = req.params.id
+    const { name, description, district, location } = req.body
+    try {
+      const [spot] = await db.query('SELECT * FROM spots WHERE id = ?', [spotId])
+      if(spot.length === 0){
+        return res.status(404).json({message:"Spot not found"})
+      }
+      await db.query(
+        `UPDATE spots SET name = ? , description = ?, district = ?, location = ? WHERE id = ?`, [name, description, district, location, spotId]
+      )
+      res.json({ message: 'Spot updated successfully' });
+    } catch (error) {
+      console.error(error);
+    res.status(500).json({ message: 'Failed to update spot' });
+    }
+  }
+
   exports.deleteSpot = async (req, res) => {
     const spotId = req.params.id;
   

@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
     <title>foodgram</title>
     <link rel="stylesheet" href="homepage.css">
@@ -24,6 +26,7 @@
         <ul class="dropdownmenu">
             <li><a href="homepage.html">HOME</a></li>
             <li><a href="spot.html">SPOT</a></li>
+            <li><a href="myspot.html">MY SPOT</a></li>
             <li><a href="#footer-1">CONTACT</a></li>
             <li class="user-menu" id="userMenu">
                 <i class="bi bi-person-circle user-icon" id="userIcon"></i>
@@ -44,8 +47,9 @@
             <h2>login</h2>
             <input type="text" placeholder="email" required id="email">
             <input type="password" placeholder="password" required id="password">
-            <button type="submit">login</button>
-            &nbsp; <button id="go-to-register">go to register</button>
+            <button type="submit">Login</button>
+            <p class="form-switch">Don't have an account? <a href="#" id="go-to-register">Register here</a></p>
+
         </form>
 
     </div>
@@ -57,8 +61,10 @@
             <input type="text" placeholder="username" required id="regUserName">
             <input type="email" placeholder="email" required id="regEmail">
             <input type="password" placeholder="password" required id="regPassword">
-            <input type="password" placeholder="conform password" required id="regConfirmPassword">
-            <button type="submit">register</button>
+            <input type="password" placeholder="confirm password" required id="regConfirmPassword">
+            <button type="submit">Register</button>
+            <p class="form-switch">Already have an account? <a href="#" id="go-to-login">Login here</a></p>
+
         </form>
 
     </div>
@@ -66,7 +72,7 @@
     <section>
         <div class="name">
             <h1>FOODGRAM</h1>
-            <p>welcome to foodgram !! enjoy delicious food with us</p>
+            <p>Welcome to Foodgram! Let’s dive into the best food spots together!</p>
         </div>
     </section>
 
@@ -74,22 +80,22 @@
         <h1>FOOD STORY</h1>
         <div class="story">
             <p>
-                Welcome to our website dedicated to exploring the vibrant street food scene in wayanad
+                Welcome to our website dedicated to exploring the vibrant street food scene in Kerala
                 embark our culinary adventure through the winding streets and bustling markets of this picturesque
                 region in india.
                 our platform is your ultimate guide to discovering the <span class="highlight">hidden gems and iconic
-                    flavours</span> that describes wayanad's street food culture.
-                from fragrant biriyanis to crispy vadas,from spicy curries to sweet treats,wayanad's street food offers
+                    flavours</span> that describes Kerala street food culture.
+                from fragrant biriyanis to crispy vadas,from spicy curries to sweet treats, Kerala street food offers
                 a
                 feast for the senses.
                 Whether you are a food enthusiast eager to try local delicious or a traveller seeking authentic culinary
                 experiences,
-                we are here to help you navigate the diverse and delicious world of wayanad's street food.
+                we are here to help you navigate the diverse and delicious world of Kerala street food.
                 <span class="highlight">Join us as we uncover the stories</span> behind each dish,share insider tips on
                 where to find the best food spots,
                 and celebrate the passion and creativity of the vendors who bring these flavours to life. get ready to
                 indulge your taste buds
-                and embark on a gastronomic journey like no other in wayanad.
+                and embark on a gastronomic journey like no other in Kerala.
             </p>
         </div>
     </section>
@@ -101,35 +107,35 @@
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga iusto necessitatibus obcaecati officia
                 doloribus ab est omnis, ea cum eum quaerat
                 exercitationem tempora? Impedit, recusandae dolores! Asperiores nostrum corrupti obcaecati.</p>
-            <button><a class="normal" href="spot.html#ibrayikka-spot">know more</a></button>
+            <button><a class="normal" href="spot.html">know more</a></button>
         </div>
         <div class="main-spot">
             <h2>Skuvetten Chayakkada</h2>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga iusto necessitatibus obcaecati officia
                 doloribus ab est omnis, ea cum eum quaerat
                 exercitationem tempora? Impedit, recusandae dolores! Asperiores nostrum corrupti obcaecati.</p>
-            <button><a class="normal" href="spot.html#sukuvetten-spot">know more</a></button>
+            <button><a class="normal" href="spot.html">know more</a></button>
         </div>
         <div class="main-spot">
             <h2>Kl-12 Thattukada</h2>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga iusto necessitatibus obcaecati officia
                 doloribus ab est omnis, ea cum eum quaerat
                 exercitationem tempora? Impedit, recusandae dolores! Asperiores nostrum corrupti obcaecati.</p>
-            <button><a class="normal" href="spot.html#kl-12spot">know more</a></button>
+            <button><a class="normal" href="spot.html">know more</a></button>
         </div>
         <div class="main-spot">
             <h2>Black Wolf</h2>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga iusto necessitatibus obcaecati officia
                 doloribus ab est omnis, ea cum eum quaerat
                 exercitationem tempora? Impedit, recusandae dolores! Asperiores nostrum corrupti obcaecati.</p>
-            <button><a class="normal" href="spot.html#wolf-spot">know more</a></button>
+            <button><a class="normal" href="spot.html">know more</a></button>
         </div>
         <div class="main-spot">
             <h2>Dwaraka Spot</h2>
             <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolore alias, velit molestiae provident illo
                 facilis tempore debitis? Ipsum, excepturi
                 fugit repudiandae id odit culpa cum impedit. Tenetur dolorem voluptatum nulla.</p>
-            <button><a class="normal" href="spot.html#dwaraka-spot">know more</a></button>
+            <button><a class="normal" href="spot.html">know more</a></button>
         </div>
     </section>
 
