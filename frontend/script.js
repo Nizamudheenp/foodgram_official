@@ -1,6 +1,4 @@
 
-const BASE_URL = 'http://localhost:3000';
-
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login');
     const registerForm = document.getElementById('register');
