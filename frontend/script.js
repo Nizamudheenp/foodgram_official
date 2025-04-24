@@ -590,7 +590,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!token) {
                 showAlert('error', 'Access Denied', 'You must be logged in as an admin to view pending spots.');
-                return window.location.href = '/frontend/homepage.html';
+                return window.location.href = '/frontend/index.html';
             }
 
             try {
@@ -624,7 +624,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!token) {
                 showAlert('error', 'Access Denied', 'You must be logged in as an admin to view all spots.');
-                return window.location.href = '/frontend/homepage.html';
+                return window.location.href = '/frontend/index.html';
             }
 
             try {
