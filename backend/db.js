@@ -1,15 +1,14 @@
 const mysql = require('mysql2');
 require('dotenv').config();
 
-const isLocalhost = ['localhost', '127.0.0.1'].includes(require('os').hostname()) 
-  || process.env.NODE_ENV !== 'production';
+const isProduction = process.env.NODE_ENV === 'production';
 
 const pool = mysql.createPool({
-  host: isLocalhost ? process.env.DB_HOST_LOCAL : process.env.DB_HOST,  
-  user: isLocalhost ? process.env.DB_USER_LOCAL : process.env.DB_USER,  
-  password: isLocalhost ? process.env.DB_PASSWORD_LOCAL : process.env.DB_PASSWORD, 
-  database: isLocalhost ? process.env.DB_NAME_LOCAL : process.env.DB_NAME,  
-  port: isLocalhost ? process.env.DB_PORT_LOCAL : process.env.DB_PORT,
+  host: isProduction ? process.env.DB_HOST : process.env.DB_HOST_LOCAL,
+  user: isProduction ? process.env.DB_USER : process.env.DB_USER_LOCAL,
+  password: isProduction ? process.env.DB_PASSWORD : process.env.DB_PASSWORD_LOCAL,
+  database: isProduction ? process.env.DB_NAME : process.env.DB_NAME_LOCAL,
+  port: isProduction ? process.env.DB_PORT : process.env.DB_PORT_LOCAL,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
