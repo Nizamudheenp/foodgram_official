@@ -1,8 +1,7 @@
 const mysql = require('mysql2');
 require('dotenv').config();
 
-const isLocalhost = ['localhost', '127.0.0.1'].includes(require('os').hostname()) 
-  || process.env.NODE_ENV !== 'production';
+const isProduction = process.env.NODE_ENV === 'production';
 
 const pool = mysql.createPool({
   host: isLocalhost ? process.env.DB_HOST_LOCAL : process.env.DB_HOST,  
