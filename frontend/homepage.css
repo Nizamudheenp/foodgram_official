@@ -252,7 +252,7 @@ a.normal:hover {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 500px;
-    height: 350px;
+    height: 360px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     background: url(bgimages/logo.jpg);
@@ -303,7 +303,6 @@ a.normal:hover {
     text-align: center;
     color: #ccc;
     font-size: 14px;
-    margin-top: 10px;
 }
 
 .form-switch a {
@@ -380,7 +379,7 @@ a.normal:hover {
 
     .register-popup {
         width: 350px;
-        height: 350px;
+        height: 360px;
     }
 }
 

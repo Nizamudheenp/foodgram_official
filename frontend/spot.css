@@ -350,7 +350,8 @@
 
 #submitSpotForm input[type="text"],
 #submitSpotForm textarea,
-#submitSpotForm input[type="file"] {
+#submitSpotForm input[type="file"],
+#submitSpotForm select {
   padding: 10px;
   font-size: 1rem;
   border: 1px solid #ccc;

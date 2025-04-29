@@ -1,5 +1,3 @@
-
-console.log("BASE_URL from config.js:", BASE_URL);
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login');
     const registerForm = document.getElementById('register');
