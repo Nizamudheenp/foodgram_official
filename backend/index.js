@@ -7,7 +7,7 @@ const userroute = require("./routes/userroute");
 const adminroute = require("./routes/adminroute");
 
 const app = express();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3000;
 
 app.use(cors({
     origin: ["http://127.0.0.1:5500",
@@ -29,6 +29,7 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, '0.0.0.0', () => {
-    console.log(`Server is running on port ${port}`);
-  });
+  console.log(`Server is running on port ${port}`);
+});
+
   
