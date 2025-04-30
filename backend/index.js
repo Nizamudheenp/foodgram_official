@@ -28,6 +28,7 @@ app.get('/', (req, res) => {
     res.send('Foodgram backend is running!');
 });
 
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
-});
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server is running on port ${port}`);
+  });
+  
