@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.role === 'admin') {
                     adminBtn.classList.remove('hidden');
                     adminBtn.onclick = () => {
-                        window.location.href = '/frontend/admindashboard.html';
+                        window.location.href = '/admindashboard.html';
                     };
                 } else {
                     adminBtn.classList.add('hidden');
@@ -181,13 +181,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     logoutBtn?.addEventListener('click', () => {
+        localStorage.removeItem('token');
         showAlert('success', 'Logged out!', 'You have successfully logged out.');
-        location.reload();
+        setTimeout(() => location.reload(), 1000);
 
     });
 
     adminBtn?.addEventListener('click', () => {
-        window.location.href = '/frontend/admindashboard.html';
+        window.location.href = '/admindashboard.html';
     });
 
 
