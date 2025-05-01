@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.role === 'admin') {
                     adminBtn.classList.remove('hidden');
                     adminBtn.onclick = () => {
-                        window.location.href = '/frontend/admindashboard.html';
+                        window.location.href = 'admindashboard.html';
                     };
                 } else {
                     adminBtn.classList.add('hidden');
@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     adminBtn?.addEventListener('click', () => {
-        window.location.href = '/frontend/admindashboard.html';
+        window.location.href = 'admindashboard.html';
     });
 
 
