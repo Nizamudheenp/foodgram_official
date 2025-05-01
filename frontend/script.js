@@ -181,12 +181,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     logoutBtn?.addEventListener('click', () => {
-        localStorage.removeItem('token');
-        showAlert('success', 'Logged out!', 'You have successfully logged out.').then(() => location.reload());
+        showAlert('success', 'Logged out!', 'You have successfully logged out.');
+        location.reload();
+
     });
 
     adminBtn?.addEventListener('click', () => {
-        window.location.href = '/admindashboard.html';
+        window.location.href = '/frontend/admindashboard.html';
     });
 
 
