@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectedImages = selectedImages.slice(0, 5);
             }
             imageInput.value = '';
-            fileLabelText.textContent = `${selectedImages.length} images selected`; imagePreview.innerHTML = '';
+            fileLabelText.textContent = `Select More (${selectedImages.length} images selected)`; imagePreview.innerHTML = '';
             imagePreview.innerHTML = '';
             selectedImages.forEach(file => {
                 const reader = new FileReader();
@@ -227,6 +227,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 reader.readAsDataURL(file);
             });
         });
+
+        // Initialize Leaflet Map
+        const map = L.map('map').setView([10.8505, 76.2711], 7); 
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        let marker;
+
+        map.on('click', function (e) {
+            const { lat, lng } = e.latlng;
+
+            if (marker) {
+                marker.setLatLng([lat, lng]);
+            } else {
+                marker = L.marker([lat, lng]).addTo(map);
+            }
+
+            document.getElementById('locationInput').value = `${lat},${lng}`;
+        });
+
+
 
 
         form.addEventListener('submit', async (e) => {
@@ -295,9 +318,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 const response = await fetch(`${BASE_URL}/api/user/top-rated`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch top-rated spots');
+                }
                 const data = await response.json();
                 displaySpots(data || []);
             } catch (error) {
+                console.log(error);
+
                 showAlert('error', 'Failed to fetch top-rated spots on load', 'There was an issue fetching the top-rated spots.');
             }
         })();
@@ -367,6 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const starsHTML = getStarHTML(rating);
                 const images = result.images ? result.images.split(',') : [];
                 const carouselId = 'carousel-' + result.id;
+                const mapId = `map-${result.id}`;
 
                 const carouselHTML = images.length > 0 ? `
                 <div id="${carouselId}" class="carousel slide" data-bs-ride="carousel">
@@ -389,25 +418,64 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             ` : '';
 
+
+
                 card.innerHTML = `
                      ${carouselHTML}
                     <div class="spot-details">
                         <h3>${result.name}</h3>
                         <p><strong>District:</strong> ${result.district}</p>
-                        <p><strong>Location:</strong> ${result.location}</p>
+                        <button class="btn btn-outline-dark mt-2 open-map-modal-btn" 
+                                data-lat="${result.location?.split(',')[0].trim()}" 
+                                data-lng="${result.location?.split(',')[1].trim()}" 
+                                data-name="${result.name}">
+                            View Map
+                        </button>
                         <div class="star-rating">
                            ${starsHTML} <span class="rating-number">${rating}  (${totalReviews} review${totalReviews === 1 ? '' : 's'})</span>
                         </div>
                         <p>${result.description || ''}</p>
                     </div>
                 `;
-                card.addEventListener('click', (e) => {
-                    if (!e.target.closest('.carousel')) {
-                        openReviewModal(result.id);
-                    }
+                const starRatingEl = card.querySelector('.star-rating');
+                starRatingEl?.addEventListener('click', (e) => {
+                    e.stopPropagation(); 
+                    openReviewModal(result.id);
                 });
 
+
                 spotContainer.appendChild(card);
+
+                const mapBtn = card.querySelector('.open-map-modal-btn');
+                if (mapBtn) {
+                    mapBtn.addEventListener('click', () => {
+                        const lat = parseFloat(mapBtn.dataset.lat);
+                        const lng = parseFloat(mapBtn.dataset.lng);
+                        const name = mapBtn.dataset.name;
+
+                        if (!isNaN(lat) && !isNaN(lng)) {
+                            if (window.mapSpotInstance) {
+                                window.mapSpotInstance.remove();
+                            }
+
+                            // Show modal
+                            const modal = new bootstrap.Modal(document.getElementById('mapSpotModal'));
+                            modal.show();
+
+                            setTimeout(() => {
+                                window.mapSpotInstance = L.map('mapSpotContainer').setView([lat, lng], 15);
+                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                    attribution: '&copy; OpenStreetMap contributors'
+                                }).addTo(window.mapSpotInstance);
+
+                                L.marker([lat, lng]).addTo(window.mapSpotInstance)
+                                    .bindPopup(name)
+                                    .openPopup();
+                            }, 300);
+                        }
+                    });
+                }
+
             });
 
         }
@@ -653,7 +721,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = document.createElement('div');
             card.className = 'pending-spot-card';
             const carouselId = 'carousel-' + spot.id;
+            const mapId = `map-${spot.id}`;
             const images = spot.images ? spot.images.split(',') : [];
+
 
             const carouselHTML = images.length > 0 ? `
             <div id="${carouselId}" class="carousel slide" data-bs-ride="carousel">
@@ -680,12 +750,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3>${spot.name}</h3>
                 <p><strong>District:</strong> ${spot.district}</p>
                 <p><strong>Location:</strong> ${spot.location}</p>
+                <div id="${mapId}" style="height: 200px; width: 100%; margin-top: 10px; border-radius: 10px;"></div>
                 <p>${spot.description || ''}</p>
                 <button class="edit-btn" data-id="${spot.id}">Edit</button>
                 <button class="delete-btn" data-id="${spot.id}">Delete</button>
             </div>
         `;
             approvedSpotsContainer.appendChild(card);
+
+            if (spot.location) {
+                const [lat, lng] = spot.location.split(',').map(coord => parseFloat(coord.trim()));
+
+                if (!isNaN(lat) && !isNaN(lng)) {
+                    const map = L.map(mapId).setView([lat, lng], 14);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap contributors'
+                    }).addTo(map);
+
+                    L.marker([lat, lng]).addTo(map)
+                        .bindPopup(spot.name)
+                        .openPopup();
+                }
+            }
+
         });
 
         document.querySelectorAll('.edit-btn').forEach(button => {
