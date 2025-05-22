@@ -152,6 +152,36 @@ document.addEventListener('DOMContentLoaded', () => {
             showLogin();
             return;
         }
+        function isTokenExpired(token) {
+            if (!token) return true;
+
+            try {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                const currentTime = Math.floor(Date.now() / 1000);
+                return payload.exp < currentTime;
+            } catch (err) {
+                console.error('Token parse error', err);
+                return true;
+            }
+        }
+        function showSessionExpiredModal() {
+            const modalHtml = `
+                <div class="modal-overlay">
+                <div class="modal session-expired">
+                    <h3>Session Expired</h3>
+                    <p>Your session has expired. Please log in again.</p>
+                    <button onclick="showLogin()">Login</button>
+                </div>
+                </div>
+            `;
+            document.body.innerHTML = modalHtml;
+        }
+
+        if (isTokenExpired(token)) {
+            localStorage.removeItem('token');
+            showSessionExpiredModal();
+        }
+
 
         try {
             const res = await fetch(`${BASE_URL}/api/user/profile`, {
@@ -229,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Initialize Leaflet Map
-        const map = L.map('map').setView([10.8505, 76.2711], 7); 
+        const map = L.map('map').setView([10.8505, 76.2711], 7);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
@@ -315,7 +345,13 @@ document.addEventListener('DOMContentLoaded', () => {
         (async function loadTopRatedOnStart() {
             topRatedBtn?.classList.add('active');
             districtBtn?.classList.remove('active');
-
+            spotContainer.innerHTML = `
+            <div class="text-center my-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            </div>
+             `
             try {
                 const response = await fetch(`${BASE_URL}/api/user/top-rated`);
                 if (!response.ok) {
@@ -325,7 +361,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 displaySpots(data || []);
             } catch (error) {
                 console.log(error);
-
                 showAlert('error', 'Failed to fetch top-rated spots on load', 'There was an issue fetching the top-rated spots.');
             }
         })();
@@ -439,7 +474,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
                 const starRatingEl = card.querySelector('.star-rating');
                 starRatingEl?.addEventListener('click', (e) => {
-                    e.stopPropagation(); 
+                    e.stopPropagation();
                     openReviewModal(result.id);
                 });
 
