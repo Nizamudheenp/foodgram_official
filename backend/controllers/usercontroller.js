@@ -19,12 +19,15 @@ exports.submitspot = async (req, res) => {
 
     const spotId = result.insertId;
 
-    for (const file of images) {
-      const cloudinaryUpload = await cloudinary.uploader.upload(file.path);
-      const imageUrl = cloudinaryUpload.secure_url;
+    const uploadPromises = images.map(file =>
+      cloudinary.uploader.upload(file.path)
+    );
+    const uploadedResults = await Promise.all(uploadPromises);
+    const insertImagePromises = uploadedResults.map(upload =>
+      db.query(`INSERT INTO spot_images (spot_id, image_url) VALUES (?, ?)`, [spotId, upload.secure_url])
+    );
 
-      await db.query(`INSERT INTO spot_images (spot_id, image_url) VALUES (?, ?)`, [spotId, imageUrl]);
-    }
+    await Promise.all(insertImagePromises);
 
     res.status(201).json({ message: 'Food spot submitted for review!' });
   } catch (error) {
