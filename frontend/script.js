@@ -429,8 +429,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const totalReviews = result.total_reviews || 0;
                 const starsHTML = getStarHTML(rating);
                 const images = result.images ? result.images.split(',') : [];
-                const carouselId = 'carousel-' + result.id;
-                const mapId = `map-${result.id}`;
+                const carouselId = 'carousel-' + result._id;
+                const mapId = `map-${result._id}`;
 
                 const carouselHTML = images.length > 0 ? `
                 <div id="${carouselId}" class="carousel slide" data-bs-ride="carousel">
@@ -475,7 +475,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const starRatingEl = card.querySelector('.star-rating');
                 starRatingEl?.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    openReviewModal(result.id);
+                    openReviewModal(result._id);
                 });
 
 
@@ -756,7 +756,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = document.createElement('div');
             card.className = 'pending-spot-card';
             const carouselId = 'carousel-' + spot.id;
-            const mapId = `map-${spot.id}`;
+            const mapId = `map-${spot._id}`;
             const images = Array.isArray(spot.images) ? spot.images : [];
 
 
@@ -872,7 +872,7 @@ document.addEventListener('DOMContentLoaded', () => {
         spots.forEach(spot => {
             const card = document.createElement('div');
             card.className = 'pending-spot-card';
-            const carouselId = 'carousel-' + spot.id;
+            const carouselId = 'carousel-' + spot._id;
             const images = Array.isArray(spot.images) ? spot.images : [];
 
             const carouselHTML = images.length > 0 ? `
@@ -902,8 +902,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p><strong>District:</strong> ${spot.district}</p>
                 <p><strong>Location:</strong> ${spot.location}</p>
                 <p>${spot.description || ''}</p>
-                <button class="approve-btn" data-id="${spot.id}">Approve</button>
-                <button class="delete-btn" data-id="${spot.id}">Delete</button>
+                <button class="approve-btn" data-id="${spot._id}">Approve</button>
+                <button class="delete-btn" data-id="${spot._id}">Delete</button>
             </div>
         `;
             pendingSpotsContainer.appendChild(card);
