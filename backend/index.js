@@ -1,11 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
+const connectDB = require('./db')
 
 const authRoutes = require("./routes/authroute");
 const userroute = require("./routes/userroute");
 const adminroute = require("./routes/adminroute");
-
+connectDB()
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -28,7 +29,7 @@ app.get('/', (req, res) => {
     res.send('Foodgram backend is running!');
 });
 
-app.listen(port, '0.0.0.0', () => {
+app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
 

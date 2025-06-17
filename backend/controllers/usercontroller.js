@@ -1,38 +1,40 @@
-const db = require("../db");
+const SpotDB = require('../models/SpotModel');
+const ReviewDB = require('../models/ReviewModel');
+const UserDB = require('../models/UserModel')
 const cloudinary = require('cloudinary').v2;
 
 exports.submitspot = async (req, res) => {
   const { name, description, district, location } = req.body;
   const userId = req.user.id;
-  const images = req.files || null;
+  const images = req.files || [];
 
-  if (!images || images.length === 0) {
+  if ( images.length === 0) {
     return res.status(400).json({ message: 'At least one image is required.' });
   }
 
   try {
-    const [result] = await db.query(
-      `INSERT INTO spots (name, description, district, location, user_id, is_verified) 
-       VALUES (?, ?, ?, ?, ?, 0)`,
-      [name, description, district, location, userId]
+    const uploadResults = await Promise.all(
+      images.map(file => cloudinary.uploader.upload(file.path))
     );
 
-    const spotId = result.insertId;
+    const imageUrls = uploadResults.map(upload => upload.secure_url);
 
-    const uploadPromises = images.map(file =>
-      cloudinary.uploader.upload(file.path)
-    );
-    const uploadedResults = await Promise.all(uploadPromises);
-    const insertImagePromises = uploadedResults.map(upload =>
-      db.query(`INSERT INTO spot_images (spot_id, image_url) VALUES (?, ?)`, [spotId, upload.secure_url])
-    );
+    const newSpot = new SpotDB({
+      name,
+      description,
+      district,
+      location,
+      user: userId,
+      images: imageUrls,
+      is_verified: false
+    });
 
-    await Promise.all(insertImagePromises);
+    await newSpot.save();
 
-    res.status(201).json({ message: 'Food spot submitted for review!' });
+    res.status(201).json({ message: "Food spot submitted for review!" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -41,19 +43,13 @@ exports.addReview = async (req, res) => {
   const { spot_id, rating, comment } = req.body;
   const userId = req.user.id;
   try {
-    const [existing] = await db.query(
-      "SELECT * FROM reviews WHERE user_id = ? AND spot_id = ?",
-      [userId, spot_id]
-    );
-
-    if (existing.length > 0) {
+    const existing = await ReviewDB.findOne({ user: userId, spot: spot_id });
+    if (existing) {
       return res.status(400).json({ message: "You have already reviewed this spot." });
     }
 
-    await db.query(
-      "INSERT INTO reviews (user_id, spot_id, rating, comment) VALUES (?, ?, ?, ?)",
-      [userId, spot_id, rating, comment]
-    );
+    const review = new ReviewDB({ user: userId, spot: spot_id, rating, comment });
+    await review.save();
 
     res.status(201).json({ message: "Review added successfully!" });
   } catch (err) {
@@ -65,13 +61,10 @@ exports.addReview = async (req, res) => {
 exports.getReviewsBySpot = async (req, res) => {
   const spotId = req.params.spotId;
   try {
-    const [reviews] = await db.query(
-      `SELECT reviews.*, users.username 
-         FROM reviews 
-         JOIN users ON reviews.user_id = users.id 
-         WHERE spot_id = ? ORDER BY created_at DESC`,
-      [spotId]
-    );
+    const reviews = await ReviewDB.find({ spot: spotId })
+      .populate("user", "username")
+      .sort({ createdAt: -1 });
+
     res.json(reviews);
   } catch (err) {
     console.error(err);
@@ -81,16 +74,25 @@ exports.getReviewsBySpot = async (req, res) => {
 
 exports.getRatingsSummary = async (req, res) => {
   try {
-    const [data] = await db.query(`
-        SELECT 
-          spot_id, 
-          ROUND(AVG(rating), 1) AS average_rating, 
-          COUNT(*) AS total_reviews 
-        FROM reviews 
-        GROUP BY spot_id
-      `);
+    const summary = await ReviewDB.aggregate([
+      {
+        $group: {
+          _id: "$spot",
+          average_rating: { $avg: "$rating" },
+          total_reviews: { $sum: 1 }
+        }
+      },
+      {
+        $project: {
+          spot_id: "$_id",
+          average_rating: { $round: ["$average_rating", 1] },
+          total_reviews: 1,
+          _id: 0
+        }
+      }
+    ]);
 
-    res.json(data);
+    res.json(summary);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to get ratings summary" });
@@ -99,21 +101,27 @@ exports.getRatingsSummary = async (req, res) => {
 
 exports.getTopRatedSpots = async (req, res) => {
   try {
-    const [results] = await db.query(`
-      SELECT 
-        s.*, 
-        GROUP_CONCAT(si.image_url) AS images,
-        ROUND(AVG(r.rating), 1) AS average_rating,
-        COUNT(DISTINCT r.id) AS total_reviews
-      FROM spots s
-      LEFT JOIN reviews r ON s.id = r.spot_id
-      LEFT JOIN spot_images si ON s.id = si.spot_id
-      WHERE s.is_verified = 1
-      GROUP BY s.id
-      ORDER BY average_rating DESC
-      LIMIT 10
-      `);
-    res.json(results);
+    const topSpots = await SpotDB.aggregate([
+      { $match: { is_verified: true } },
+      {
+        $lookup: {
+          from: "reviews",
+          localField: "_id",
+          foreignField: "spot",
+          as: "reviews"
+        }
+      },
+      {
+        $addFields: {
+          average_rating: { $avg: "$reviews.rating" },
+          total_reviews: { $size: "$reviews" }
+        }
+      },
+      { $sort: { average_rating: -1 } },
+      { $limit: 10 }
+    ]);
+
+    res.json(topSpots);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch top rated spots" });
@@ -124,29 +132,27 @@ exports.getTopRatedSpots = async (req, res) => {
 exports.getSpotsbydistrict = async (req, res) => {
   const { district } = req.query;
 
-  let query = `
-     SELECT 
-      s.*, 
-      GROUP_CONCAT(si.image_url) AS images,
-      ROUND(AVG(r.rating), 1) AS average_rating,
-      COUNT(DISTINCT r.id) AS total_reviews
-    FROM spots s
-    LEFT JOIN reviews r ON s.id = r.spot_id
-    LEFT JOIN spot_images si ON s.id = si.spot_id
-    WHERE s.is_verified = TRUE
-    `;
-  let params = [];
-
-  if (district) {
-    query += " AND s.district = ?";
-    params.push(district);
-  }
-
-  query += " GROUP BY s.id ORDER BY average_rating DESC";
+   const query = { is_verified: true };
+  if (district) query.district = district;
 
   try {
-    const [spots] = await db.query(query, params);
-    res.json(spots);
+    const spots = await SpotDB.find(query).lean();
+
+    const ratedSpots = await Promise.all(
+      spots.map(async spot => {
+        const reviews = await ReviewDB.find({ spot: spot._id });
+        const avg = reviews.reduce((sum, r) => sum + r.rating, 0) / (reviews.length || 1);
+        return {
+          ...spot,
+          average_rating: Math.round(avg * 10) / 10,
+          total_reviews: reviews.length
+        };
+      })
+    );
+
+    ratedSpots.sort((a, b) => b.average_rating - a.average_rating);
+
+    res.json(ratedSpots);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch spots by district" });
@@ -158,22 +164,26 @@ exports.searchspot = async (req, res) => {
   const { query: searchQuery } = req.query;
 
   try {
-    const [spots] = await db.query(
-      `SELECT 
-        s.*, 
-        GROUP_CONCAT(si.image_url) AS images,
-        ROUND(AVG(r.rating), 1) AS average_rating,
-       COUNT(DISTINCT r.id) AS total_reviews
-       FROM spots s
-       LEFT JOIN reviews r ON s.id = r.spot_id
-       LEFT JOIN spot_images si ON s.id = si.spot_id
-       WHERE s.name LIKE ? AND s.is_verified = 1
-       GROUP BY s.id
-       ORDER BY average_rating DESC`,
-      [`%${searchQuery}%`]
+    const spots = await SpotDB.find({
+      name: { $regex: searchQuery, $options: "i" },
+      is_verified: true
+    }).lean();
+
+    const ratedSpots = await Promise.all(
+      spots.map(async spot => {
+        const reviews = await ReviewDB.find({ spot: spot._id });
+        const avg = reviews.reduce((sum, r) => sum + r.rating, 0) / (reviews.length || 1);
+        return {
+          ...spot,
+          average_rating: Math.round(avg * 10) / 10,
+          total_reviews: reviews.length
+        };
+      })
     );
 
-    res.json(spots);
+    ratedSpots.sort((a, b) => b.average_rating - a.average_rating);
+
+    res.json(ratedSpots);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to search spots" });
@@ -186,11 +196,11 @@ exports.getProfile = async (req, res) => {
   const userId = req.user.id
 
   try {
-    const [users] = await db.query('SELECT id , username, email, role FROM users WHERE id = ?', [userId])
-    if (users.length === 0) {
-      return res.status(404).json({ message: 'user not found' })
+     const user = await UserDB.findById(userId).select("username email role");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-    res.status(200).json(users[0])
+    res.status(200).json(user);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
@@ -201,11 +211,11 @@ exports.deleteAccount = async (req, res) => {
   const userId = req.user.id;
 
   try {
-    await db.query('DELETE FROM users WHERE id = ?', [userId]);
-    res.json({ message: 'Account deleted successfully' });
+    await UserDB.findByIdAndDelete(userId);
+    res.json({ message: "Account deleted successfully" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
