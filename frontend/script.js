@@ -757,7 +757,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className = 'pending-spot-card';
             const carouselId = 'carousel-' + spot.id;
             const mapId = `map-${spot.id}`;
-            const images = spot.images ? spot.images.split(',') : [];
+            const images = Array.isArray(spot.images) ? spot.images : [];
 
 
             const carouselHTML = images.length > 0 ? `
@@ -794,8 +794,8 @@ document.addEventListener('DOMContentLoaded', () => {
             approvedSpotsContainer.appendChild(card);
 
             if (spot.location) {
-                const [lat, lng] = spot.location.split(',').map(coord => parseFloat(coord.trim()));
-
+                const lat = spot.location?.lat;
+                const lng = spot.location?.lng;
                 if (!isNaN(lat) && !isNaN(lng)) {
                     const map = L.map(mapId).setView([lat, lng], 14);
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -873,7 +873,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = document.createElement('div');
             card.className = 'pending-spot-card';
             const carouselId = 'carousel-' + spot.id;
-            const images = spot.images ? spot.images.split(',') : [];
+            const images = Array.isArray(spot.images) ? spot.images : [];
 
             const carouselHTML = images.length > 0 ? `
         <div id="${carouselId}" class="carousel slide" data-bs-ride="carousel">
