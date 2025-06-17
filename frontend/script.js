@@ -428,7 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const rating = parseFloat(result.average_rating) || 0;
                 const totalReviews = result.total_reviews || 0;
                 const starsHTML = getStarHTML(rating);
-                const images = result.images ? result.images.split(',') : [];
+                const images = Array.isArray(result.images) ? result.images : [];
                 const carouselId = 'carousel-' + result._id;
                 const mapId = `map-${result._id}`;
 
