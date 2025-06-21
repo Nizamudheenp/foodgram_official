@@ -422,7 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
             results.forEach(result => {
                 const card = document.createElement('div');
                 card.className = 'spot-card';
-                card.dataset.spotId = result.id;
+                card.dataset.spotId = result._id;
 
 
                 const rating = parseFloat(result.average_rating) || 0;
@@ -755,7 +755,7 @@ document.addEventListener('DOMContentLoaded', () => {
         spots.forEach(spot => {
             const card = document.createElement('div');
             card.className = 'pending-spot-card';
-            const carouselId = 'carousel-' + spot.id;
+            const carouselId = 'carousel-' + spot._id;
             const mapId = `map-${spot._id}`;
             const images = Array.isArray(spot.images) ? spot.images : [];
 
@@ -787,8 +787,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p><strong>Location:</strong> ${spot.location}</p>
                 <div id="${mapId}" style="height: 200px; width: 100%; margin-top: 10px; border-radius: 10px;"></div>
                 <p>${spot.description || ''}</p>
-                <button class="edit-btn" data-id="${spot.id}">Edit</button>
-                <button class="delete-btn" data-id="${spot.id}">Delete</button>
+                <button class="edit-btn" data-id="${spot._id}">Edit</button>
+                <button class="delete-btn" data-id="${spot._id}">Delete</button>
             </div>
         `;
             approvedSpotsContainer.appendChild(card);
