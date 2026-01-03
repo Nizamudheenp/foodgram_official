@@ -1,7 +1,8 @@
 .spot-controls {
   margin-top: 100px;
   padding: 20px;
-  background-color: #f8f9fa;
+  background: linear-gradient(to right, #fdfdfd, #f3f3f3);
+  border: 1px solid #ddd;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   max-width: 1000px;
@@ -101,13 +102,25 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s ease-in-out;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #eaeaea;
+  animation: fadeInUp 0.4s ease;
+}
+
+@keyframes fadeInUp {
+  0%{
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100%{
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .spot-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
 }
 
 .spot-img {
@@ -343,13 +356,25 @@
   max-width: 500px;
   margin: 100px auto;
   padding: 30px;
-  background-color: #f8f9fa;
+  background: linear-gradient(to right, #ffffff, #f7f7f7);
   border-radius: 12px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
+#submitSpotForm h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+#map {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
 
 #submitSpotForm input[type="text"],
 #submitSpotForm textarea,
@@ -412,8 +437,8 @@
 }
 
 .preview-thumb {
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
   object-fit: cover;
   margin: 5px;
   border-radius: 5px;

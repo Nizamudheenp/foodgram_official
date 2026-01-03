@@ -437,7 +437,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="carousel-inner">
                         ${images.map((img, i) => `
                             <div class="carousel-item ${i === 0 ? 'active' : ''}">
-                                <img src="${img.trim()}" class="d-block w-100" style="max-height: 250px; object-fit: cover;" alt="Spot Image">
+                                <img src="${img.trim()}" class="d-block w-100" style="max-height: 250px; object-fit: cover;" alt="Spot Image" loading="lazy">
                             </div>
                         `).join('')}
                     </div>
