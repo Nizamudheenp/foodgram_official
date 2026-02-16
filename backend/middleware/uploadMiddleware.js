@@ -7,7 +7,10 @@ const storage = new CloudinaryStorage({
   params: {
     folder: 'foodgram_spots',
     allowed_formats: ['jpg', 'jpeg', 'png'],
-    transformation: [{ width: 800, height: 600, crop: 'limit' }],
+    transformation: [
+      { width: 800, height: 600, crop: 'limit' },
+      { quality: 'auto', fetch_format: 'auto' }
+    ],
   },
 });
 

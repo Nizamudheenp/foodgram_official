@@ -44,10 +44,35 @@ document.addEventListener('DOMContentLoaded', () => {
         overlay.style.display = 'none';
     };
 
-    const showLogin = () => {
+    window.showLogin = () => {
         hideModals();
         showModal(loginPopup);
     };
+
+    window.isTokenExpired = (token) => {
+        if (!token) return true;
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            const currentTime = Math.floor(Date.now() / 1000);
+            return payload.exp < currentTime;
+        } catch (err) {
+            console.error('Token parse error', err);
+            return true;
+        }
+    };
+
+    function handleAuthError() {
+        localStorage.removeItem('token');
+        Swal.fire({
+            icon: 'warning',
+            title: 'Session Expired',
+            text: 'Your session has expired. Please log in again.',
+            confirmButtonText: 'Login',
+            allowOutsideClick: false
+        }).then(() => {
+            window.showLogin();
+        });
+    }
 
     if (goToRegisterBtn && goToLoginBtn && loginPopup && registerPopup) {
         goToRegisterBtn.addEventListener('click', (e) => {
@@ -152,34 +177,9 @@ document.addEventListener('DOMContentLoaded', () => {
             showLogin();
             return;
         }
-        function isTokenExpired(token) {
-            if (!token) return true;
-
-            try {
-                const payload = JSON.parse(atob(token.split('.')[1]));
-                const currentTime = Math.floor(Date.now() / 1000);
-                return payload.exp < currentTime;
-            } catch (err) {
-                console.error('Token parse error', err);
-                return true;
-            }
-        }
-        function showSessionExpiredModal() {
-            const modalHtml = `
-                <div class="modal-overlay">
-                <div class="modal session-expired">
-                    <h3>Session Expired</h3>
-                    <p>Your session has expired. Please log in again.</p>
-                    <button onclick="showLogin()">Login</button>
-                </div>
-                </div>
-            `;
-            document.body.innerHTML = modalHtml;
-        }
-
-        if (isTokenExpired(token)) {
-            localStorage.removeItem('token');
-            showSessionExpiredModal();
+        if (window.isTokenExpired(token)) {
+            handleAuthError();
+            return;
         }
 
 
@@ -187,6 +187,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch(`${BASE_URL}/api/user/profile`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
+
+            if (res.status === 401) {
+                handleAuthError();
+                return;
+            }
 
             const data = await res.json();
             if (res.ok) {
@@ -314,6 +319,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     body: formData
                 });
+
+                if (response.status === 401) {
+                    handleAuthError();
+                    return;
+                }
 
                 const result = await response.json();
 
@@ -564,6 +574,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
+            if (res.status === 401) {
+                handleAuthError();
+                return;
+            }
+
             const result = await res.json();
 
             if (res.ok) {
@@ -591,9 +606,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             reviewItem.innerHTML = `
                 <div>
-                <p><strong>${review.username}</strong> <span class="rating">${getStarHTML(review.rating)}</span></p>
+                <p><strong>${review.user?.username || 'Guest'}</strong> <span class="rating">${getStarHTML(review.rating)}</span></p>
                 <p>${review.comment}</p>
-                <p class="review-date">${new Date(review.created_at).toLocaleString()}</p>
+                <p class="review-date">${new Date(review.createdAt).toLocaleString()}</p>
                 </div>
             `;
 
@@ -645,6 +660,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         comment: comment
                     })
                 });
+
+                if (res.status === 401) {
+                    handleAuthError();
+                    return;
+                }
 
                 const result = await res.json();
 
@@ -702,6 +722,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         Authorization: `Bearer ${token}`
                     }
                 });
+
+                if (res.status === 401) {
+                    handleAuthError();
+                    return;
+                }
+
                 const data = await res.json();
 
                 if (Array.isArray(data) && data.length > 0) {
@@ -736,6 +762,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         Authorization: `Bearer ${token}`
                     }
                 });
+
+                if (res.status === 401) {
+                    handleAuthError();
+                    return;
+                }
+
                 const data = await res.json();
 
                 if (Array.isArray(data) && data.length > 0) {
@@ -786,7 +818,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p><strong>District:</strong> ${spot.district}</p>
                 <p><strong>Location:</strong> ${spot.location}</p>
                 <div id="${mapId}" style="height: 200px; width: 100%; margin-top: 10px; border-radius: 10px;"></div>
-                <p>${spot.description || ''}</p>
+                <p class="spot-desc">${spot.description || ''}</p>
                 <button class="edit-btn" data-id="${spot._id}">Edit</button>
                 <button class="delete-btn" data-id="${spot._id}">Delete</button>
             </div>
@@ -850,6 +882,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({ name, district, location, description })
                 });
 
+                if (res.status === 401) {
+                    handleAuthError();
+                    return;
+                }
+
                 const data = await res.json();
 
                 if (res.ok) {
@@ -901,7 +938,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3>${spot.name}</h3>
                 <p><strong>District:</strong> ${spot.district}</p>
                 <p><strong>Location:</strong> ${spot.location}</p>
-                <p>${spot.description || ''}</p>
+                <p class="spot-desc">${spot.description || ''}</p>
                 <button class="approve-btn" data-id="${spot._id}">Approve</button>
                 <button class="delete-btn" data-id="${spot._id}">Delete</button>
             </div>
@@ -919,6 +956,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             Authorization: `Bearer ${token}`
                         }
                     });
+
+                    if (res.status === 401) {
+                        handleAuthError();
+                        return;
+                    }
+
                     const data = await res.json();
                     if (res.ok) {
                         showAlert('success', 'Success', data.message || 'Spot approved.');
@@ -950,6 +993,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                 Authorization: `Bearer ${token}`
                             }
                         });
+
+                        if (res.status === 401) {
+                            handleAuthError();
+                            return;
+                        }
 
                         const data = await res.json();
                         if (res.ok) {

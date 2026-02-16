@@ -8,7 +8,7 @@ exports.submitspot = async (req, res) => {
   const userId = req.user.id;
   const images = req.files || [];
 
-  if ( images.length === 0) {
+  if (images.length === 0) {
     return res.status(400).json({ message: 'At least one image is required.' });
   }
 
@@ -113,10 +113,11 @@ exports.getTopRatedSpots = async (req, res) => {
       },
       {
         $addFields: {
-          average_rating: { $avg: "$reviews.rating" },
+          average_rating: { $ifNull: [{ $round: [{ $avg: "$reviews.rating" }, 1] }, 0] },
           total_reviews: { $size: "$reviews" }
         }
       },
+      { $project: { reviews: 0 } },
       { $sort: { average_rating: -1 } },
       { $limit: 10 }
     ]);
@@ -132,25 +133,29 @@ exports.getTopRatedSpots = async (req, res) => {
 exports.getSpotsbydistrict = async (req, res) => {
   const { district } = req.query;
 
-   const query = { is_verified: true };
-  if (district) query.district = district;
+  const matchQuery = { is_verified: true };
+  if (district) matchQuery.district = district;
 
   try {
-    const spots = await SpotDB.find(query).lean();
-
-    const ratedSpots = await Promise.all(
-      spots.map(async spot => {
-        const reviews = await ReviewDB.find({ spot: spot._id });
-        const avg = reviews.reduce((sum, r) => sum + r.rating, 0) / (reviews.length || 1);
-        return {
-          ...spot,
-          average_rating: Math.round(avg * 10) / 10,
-          total_reviews: reviews.length
-        };
-      })
-    );
-
-    ratedSpots.sort((a, b) => b.average_rating - a.average_rating);
+    const ratedSpots = await SpotDB.aggregate([
+      { $match: matchQuery },
+      {
+        $lookup: {
+          from: "reviews",
+          localField: "_id",
+          foreignField: "spot",
+          as: "reviews"
+        }
+      },
+      {
+        $addFields: {
+          average_rating: { $ifNull: [{ $round: [{ $avg: "$reviews.rating" }, 1] }, 0] },
+          total_reviews: { $size: "$reviews" }
+        }
+      },
+      { $project: { reviews: 0 } },
+      { $sort: { average_rating: -1 } }
+    ]);
 
     res.json(ratedSpots);
   } catch (err) {
@@ -163,25 +168,38 @@ exports.getSpotsbydistrict = async (req, res) => {
 exports.searchspot = async (req, res) => {
   const { query: searchQuery } = req.query;
 
+  if (!searchQuery) {
+    return res.status(400).json({ error: "Search query is required" });
+  }
+
+  // Basic sanitization for regex
+  const sanitizedQuery = searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
   try {
-    const spots = await SpotDB.find({
-      name: { $regex: searchQuery, $options: "i" },
-      is_verified: true
-    }).lean();
-
-    const ratedSpots = await Promise.all(
-      spots.map(async spot => {
-        const reviews = await ReviewDB.find({ spot: spot._id });
-        const avg = reviews.reduce((sum, r) => sum + r.rating, 0) / (reviews.length || 1);
-        return {
-          ...spot,
-          average_rating: Math.round(avg * 10) / 10,
-          total_reviews: reviews.length
-        };
-      })
-    );
-
-    ratedSpots.sort((a, b) => b.average_rating - a.average_rating);
+    const ratedSpots = await SpotDB.aggregate([
+      {
+        $match: {
+          name: { $regex: sanitizedQuery, $options: "i" },
+          is_verified: true
+        }
+      },
+      {
+        $lookup: {
+          from: "reviews",
+          localField: "_id",
+          foreignField: "spot",
+          as: "reviews"
+        }
+      },
+      {
+        $addFields: {
+          average_rating: { $ifNull: [{ $round: [{ $avg: "$reviews.rating" }, 1] }, 0] },
+          total_reviews: { $size: "$reviews" }
+        }
+      },
+      { $project: { reviews: 0 } },
+      { $sort: { average_rating: -1 } }
+    ]);
 
     res.json(ratedSpots);
   } catch (error) {
@@ -196,7 +214,7 @@ exports.getProfile = async (req, res) => {
   const userId = req.user.id
 
   try {
-     const user = await UserDB.findById(userId).select("username email role");
+    const user = await UserDB.findById(userId).select("username email role");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
