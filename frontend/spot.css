@@ -1,20 +1,36 @@
 .spot-controls {
   margin-top: 100px;
-  padding: 20px;
-  background: linear-gradient(to right, #fdfdfd, #f3f3f3);
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 40px;
+  background: #fdfdf4;
+  /* Kerala Cream */
+  border: 1px solid rgba(197, 160, 33, 0.3);
+  border-radius: 4px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
   max-width: 1000px;
   margin-left: auto;
   margin-right: auto;
+  position: relative;
+}
+
+.spot-controls::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border: 1px solid #c5a021;
+  opacity: 0.1;
+  pointer-events: none;
 }
 
 .spot-controls h2 {
   text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-  font-size: 28px;
+  margin-bottom: 30px;
+  color: #b0413e;
+  /* Terracotta */
+  font-size: 32px;
+  font-family: 'Georgia', serif;
 }
 
 .filters {
@@ -32,44 +48,31 @@
   font-size: 16px;
 }
 
-#searchBtn {
-  padding: 10px 20px;
-  display: inline-block;
-  text-decoration: none;
-  background-color: #e0e0e0;
-  color: #000;
-  font-size: 16px;
-  border-radius: 4px;
-  font-weight: 600;
-  border: none;
-  transition: 0.5s;
-  cursor: pointer;
-
-}
-
-#searchBtn:hover {
-  color: #fff;
-  background-color: #000;
-}
-
+#searchBtn,
 .filter-btn {
-  padding: 8px 16px;
-  background-color: #e0e0e0;
+  padding: 10px 22px;
+  background: linear-gradient(135deg, #b0413e, #8d2f2d);
+  color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.2s ease-in-out;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(176, 65, 62, 0.2);
 }
 
+#searchBtn:hover,
 .filter-btn:hover {
-  background-color: #222;
-  color: #fff;
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(176, 65, 62, 0.3);
 }
 
 .filter-btn.active {
-  background-color: #000;
-  color: white;
+  background: #2d5a27;
+  /* Lush Green */
+  box-shadow: 0 4px 10px rgba(45, 90, 39, 0.2);
 }
 
 #districtSelect {
@@ -86,49 +89,60 @@
 
 .spot-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
   padding: 40px 20px;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  justify-content: center; 
 }
 
 .spot-card {
-  max-width: 360px; 
   background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  box-shadow: 6px 6px 0px #c5a021;
+  /* Kasavu Gold */
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid #eaeaea;
-  animation: fadeInUp 0.4s ease;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  border: 1px solid rgba(197, 160, 33, 0.2);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.spot-card:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 12px 12px 0px #b0413e;
+  /* Terracotta */
 }
 
 @keyframes fadeInUp {
-  0%{
+  0% {
     opacity: 0;
     transform: translateY(20px);
   }
-  100%{
+
+  100% {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
+.open-map-modal-btn {
+  background: transparent !important;
+  border: 2px solid var(--terracotta, #b0413e) !important;
+  color: var(--terracotta, #b0413e) !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+}
+
+.open-map-modal-btn:hover {
+  background: var(--terracotta, #b0413e) !important;
+  color: #fff !important;
+}
+
 .spot-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-}
-
-.spot-img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  object-position: center;
-  border-bottom: 1px solid #eee;
 }
 
 .spot-details {
@@ -353,21 +367,24 @@
 /* my spot.html  */
 
 #submitSpotForm {
-  max-width: 500px;
-  margin: 100px auto;
-  padding: 30px;
-  background: linear-gradient(to right, #ffffff, #f7f7f7);
-  border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 120px auto;
+  padding: 40px;
+  background: var(--kerala-cream, #fdfdf4);
+  border-radius: 4px;
+  border: 1px solid rgba(197, 160, 33, 0.3);
+  box-shadow: 8px 8px 0px var(--kasavu-gold, #c5a021);
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
 }
+
 #submitSpotForm h2 {
-  font-size: 24px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 20px;
+  font-size: 32px;
+  font-family: 'Georgia', serif;
+  color: var(--terracotta, #b0413e);
+  margin-bottom: 10px;
+  text-align: center;
 }
 
 #map {
@@ -395,17 +412,21 @@
 
 #submitSpotForm button {
   color: #fff;
-  background-color: #000;
-  padding: 12px;
-  font-size: 1rem;
+  background: linear-gradient(135deg, #b0413e, #8d2f2d);
+  padding: 14px;
+  font-size: 1.1rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(176, 65, 62, 0.2);
 }
 
 #submitSpotForm button:hover {
-  background-color: #3f3737;
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(176, 65, 62, 0.3);
 }
 
 #submitMessage {
@@ -460,14 +481,18 @@
   display: flex;
   flex-direction: row;
   background-color: #fff;
-  border-radius: 10px;
+  border-radius: 4px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
+  box-shadow: 6px 6px 0px #c5a021;
+  border: 1px solid rgba(197, 160, 33, 0.2);
+  transition: all 0.3s ease;
+  margin-bottom: 30px;
+  align-items: stretch;
 }
 
 .pending-spot-card:hover {
-  transform: scale(1.01);
+  transform: translate(-4px, -4px);
+  box-shadow: 10px 10px 0px #b0413e;
 }
 
 .pending-img {
@@ -489,49 +514,63 @@
 }
 
 .pending-details p {
-  margin: 0.5rem 0;
-  color: #666;
-  font-size: 0.95rem;
+  margin: 5px 0;
+  /* Reduced gap */
+  color: #444;
+  /* Darker for better visibility */
+  font-size: 16px;
+  line-height: 1.5;
 }
 
-.approve-btn {
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: #28a745;
-  color: white;
+.spot-desc {
+  margin-top: 20px !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding-top: 10px;
+}
+
+.approve-btn,
+.edit-btn,
+.delete-btn {
+  padding: 10px 22px;
+  color: #fff !important;
   border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.2s ease;
-}
-
-.approve-btn:hover {
-  background-color: #218838;
-}
-
-.admin-actions {
-  margin-top: 10px;
-  display: flex;
-  gap: 10px;
-}
-
-.approve-btn {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  cursor: pointer;
   border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 5px;
+}
+
+.approve-btn {
+  background: linear-gradient(135deg, #2d5a27, #1e3d1a);
+  /* Lush Green */
+}
+
+.edit-btn {
+  background: linear-gradient(135deg, var(--terracotta), #8d2f2d);
+  /* Terracotta */
 }
 
 .delete-btn {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  cursor: pointer;
-  border-radius: 4px;
+  background: linear-gradient(135deg, #cc3300, #992600);
+  /* Darker red */
+}
+
+.approve-btn:hover,
+.edit-btn:hover,
+.delete-btn:hover {
+  filter: brightness(1.2);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.admin-actions {
+  margin-top: 15px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .approve-btn:hover,
@@ -539,6 +578,24 @@
   opacity: 0.9;
 }
 
+
+.admin-tab-btn {
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #b0413e, #8d2f2d);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(176, 65, 62, 0.2);
+}
+
+.admin-tab-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(176, 65, 62, 0.3);
+  filter: brightness(1.1);
+}
 
 @media (max-width: 600px) {
   .pending-spot-card {
