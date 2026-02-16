@@ -629,9 +629,7 @@ footer {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    background: #000;
-    color: #eeeeee;
-    /* High contrast white */
+    color: #000;
     padding: 60px 80px 40px;
     gap: 30px;
     border-top: 3px solid var(--kasavu-gold);
@@ -667,8 +665,7 @@ footer h4::after {
 footer p,
 footer a {
     font-size: 15px;
-    color: #eeeeee;
-    /* Increased contrast */
+    color: #000;
     text-decoration: none;
     transition: color 0.3s ease;
 }
