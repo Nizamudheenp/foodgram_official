@@ -1,0 +1,125 @@
+/* Auth Popups Styling */
+
+.login-popup,
+.register-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    padding: 30px;
+    box-shadow: 10px 10px 0px var(--film-black, #080808);
+    background-color: var(--film-black, #080808);
+    display: none;
+    z-index: 1000;
+    border-radius: 0;
+    border: 2px solid var(--film-white, #f5f5f5);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.login-popup {
+    height: auto;
+    min-height: 250px;
+}
+
+.register-popup {
+    height: auto;
+    min-height: 360px;
+}
+
+.login-popup h2,
+.register-popup h2 {
+    color: var(--film-white, #f5f5f5);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+.login-popup input,
+.register-popup input {
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+    border-radius: 0;
+    margin: 10px 0;
+    outline: none;
+    box-sizing: border-box;
+    color: var(--film-white, #f5f5f5);
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--film-white, #f5f5f5);
+}
+
+.login-popup input::placeholder,
+.register-popup input::placeholder {
+    color: var(--film-silver, #c0c0c0);
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+.login-popup button,
+.register-popup button {
+    margin: 15px 0;
+    padding: 12px;
+    background: var(--film-white, #f5f5f5);
+    color: var(--film-black, #080808);
+    border-radius: 0;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    border: 1px solid var(--film-white, #f5f5f5);
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.login-popup button:hover,
+.register-popup button:hover {
+    background: var(--film-black, #080808);
+    color: var(--film-white, #f5f5f5);
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: none;
+    z-index: 999;
+}
+
+.form-switch {
+    text-align: center;
+    color: var(--film-silver, #c0c0c0);
+    font-size: 13px;
+    margin-top: 10px;
+}
+
+.form-switch a {
+    color: var(--film-white, #f5f5f5);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@media (max-width: 768px) {
+
+    .login-popup,
+    .register-popup {
+        width: 90%;
+        padding: 20px;
+    }
+}

@@ -14,6 +14,7 @@
 
     <title>foodgram</title>
     <link rel="stylesheet" href="homepage.css">
+    <link rel="stylesheet" href="auth.css">
 </head>
 
 <body>
@@ -41,34 +42,6 @@
 
     </header>
 
-    <div class="overlay"></div>
-
-    <div id="loginForm" class="login-popup">
-        <form id="login">
-            <h2>login</h2>
-            <input type="text" placeholder="email" required id="email">
-            <input type="password" placeholder="password" required id="password">
-            <button type="submit">Login</button>
-            <p class="form-switch">Don't have an account? <a href="#" id="go-to-register">Register here</a></p>
-
-        </form>
-
-    </div>
-
-
-    <div id="registerForm" class="register-popup">
-        <form id="register">
-            <h2>register</h2>
-            <input type="text" placeholder="username" required id="regUserName">
-            <input type="email" placeholder="email" required id="regEmail">
-            <input type="password" placeholder="password" required id="regPassword">
-            <input type="password" placeholder="confirm password" required id="regConfirmPassword">
-            <button type="submit">Register</button>
-            <p class="form-switch">Already have an account? <a href="#" id="go-to-login">Login here</a></p>
-
-        </form>
-
-    </div>
 
     <section>
         <div class="name">
@@ -108,31 +81,29 @@
             <p>A gem among food spots in Wayanad. This small home-style setup is legendary for its Dosa-Chattini, Chilli
                 Green Chammandhi, and Pepper Lemon Pickle. The star attraction is the delicious fried Sardines - a taste
                 that brings people back forever for that perfect Dosa-Chattini-Sardine combination.</p>
-            <button><a class="normal" href="spot.html">know more</a></button>
         </div>
         <div class="main-spot">
             <h2>Skuvetten Chayakkada</h2>
             <p>A hidden gem in the heart of Wayanad, offering a variety of traditional Kerala breakfast items. Their
                 Puttu and Kadala curry are highly recommended for an authentic local experience.</p>
-            <button><a class="normal" href="spot.html">know more</a></button>
         </div>
         <div class="main-spot">
             <h2>Kl-12 Thattukada</h2>
             <p>The go-to place for night owls and street food lovers. Serving spicy beef fry and soft Porottas until
                 late at night, it's a staple of the local street food scene.</p>
-            <button><a class="normal" href="spot.html">know more</a></button>
         </div>
         <div class="main-spot">
             <h2>Black Wolf</h2>
             <p>A modern take on traditional flavors. Known for its unique fusion dishes that blend regional Kerala
                 spices with international street food concepts.</p>
-            <button><a class="normal" href="spot.html">know more</a></button>
         </div>
         <div class="main-spot">
             <h2>Dwaraka Spot</h2>
             <p>Nestled in the lush greenery of Dwaraka, this spot is famous for its homestyle meals served on banana
                 leaves. A must-visit for those seeking the true taste of Wayanad.</p>
-            <button><a class="normal" href="spot.html">know more</a></button>
+        </div>
+        <div class="central-button-container">
+            <a class="normal" href="spot.html">know more</a>
         </div>
     </section>
 
@@ -186,6 +157,7 @@
     </script>
 
     <script src="config.js"></script>
+    <script src="auth-components.js"></script>
     <script src="script.js"></script>
 
 

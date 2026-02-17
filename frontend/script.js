@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
             icon: type,
             title: title,
             text: text,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#080808',
         });
     }
 
@@ -22,9 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
             text: text,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, do it!'
+            confirmButtonColor: '#080808',
+            cancelButtonColor: '#4a4a4a',
+            confirmButtonText: 'Yes'
         }).then((result) => {
             if (result.isConfirmed) {
                 callback();
@@ -622,7 +622,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const star = document.createElement('span');
             star.textContent = '★';
             star.classList.add('star');
-            star.style.color = i <= selectedRating ? 'gold' : '#ccc';
+            star.style.color = i <= selectedRating ? '#080808' : '#c0c0c0';
             star.addEventListener('click', () => {
                 selectedRating = i;
                 renderStarInputs();
