@@ -340,7 +340,7 @@ section h1::after {
 .name p {
     color: var(--film-charcoal);
     font-size: 24px;
-    max-width: 800px;
+    max-width: 700px;
     line-height: 1.6;
     margin-top: 30px;
     z-index: 1;
